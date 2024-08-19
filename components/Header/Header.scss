@@ -1,0 +1,40 @@
+.after-line {
+    position: relative;
+    display: inline-block;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    line-height: 1.2;
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background-color: #a6c4b1;
+        transition: width .4s cubic-bezier(.175,.885,.32,1.15);
+    }
+
+    &:hover::after {
+        width: 100%;
+    }
+}
+
+.nav-show-block {
+    animation: nav-show-block 0.3s linear forwards;
+}
+
+.nav-hide-block {
+    animation: nav-hide-block 0.3s linear forwards;
+}
+
+@keyframes nav-show-block {
+    0% { opacity: 0; transform: translateY(-10px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes nav-hide-block {
+    0% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-10px); }
+}

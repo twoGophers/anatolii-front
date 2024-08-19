@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    .global-text-title {
+        @apply text-3xl;
+        @apply font-bold;
+    }
+
+    /* animation hover color */
+    .global-transition {
+        @apply transition;
+        @apply ease-in-out;
+        @apply duration-300;
+        @apply delay-0;
+    }
+
+    .h-4-title {
+        @apply text-2xl;
+        @apply font-bold;
+    }
+
+    .margin-title {
+        @apply mt-8 mb-6
+    }
+
+    .margin-block {
+        @apply mt-10
+    }
+
+    .hover-item {
+        @apply hover:bg-slate-50
+    }
+}

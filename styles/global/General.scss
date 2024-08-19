@@ -1,0 +1,25 @@
+body {
+    height: 100%;
+    width: 100%;
+    overflow-x: hidden;
+    // position: relative;
+    //background: linear-gradient(135deg, #313330, #2f312e, #2a2c2a, #242524, #1e1f1e, #1a1a1a, #181818);
+    // background: url('../../public/images/body/h-ygyrw_MuBg.png') no-repeat center;
+    background-size: cover;
+    text-align: left;
+    box-sizing: border-box;
+    // font-family: Lato, Arial, Helvetica, sans-serif;
+    -webkit-text-size-adjust: none;
+}
+
+
+.container {
+    max-width: 1222px;
+    margin: 0 auto;
+    padding: 0px 15px;
+    width: 95%;
+}
+
+.main {
+    margin-top: 20px;
+}
