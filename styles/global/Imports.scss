@@ -3,3 +3,17 @@
 @import './Reset.scss';
 @import './General.scss';
 @import './Animation.scss';
+
+// Slider
+@import '../slider.scss';
+@import '../pages/home.scss';
+@import '../global.css';
+@import 'swiper/css';
+@import 'swiper/css/navigation';
+@import 'swiper/css/pagination';
+@import 'swiper/css/scrollbar';
+
+
+// components
+@import '../../components//Header/Header.scss';
+@import '../../components/Categoria/Categoria.scss';

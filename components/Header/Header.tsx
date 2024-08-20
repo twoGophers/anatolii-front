@@ -1,19 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { useRouter } from 'next/router';
 import Image from "next/image";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPhone, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import data from "@/db/catalog.json";
-
 import Logo from "@/assets/logo.png";
 
-import "./Header.scss";
-
 export default function Header() {
-  let lang = "RU";
-
+  const router = useRouter();
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+  
+  let lang = "RU";
 
   const handleMouseEnter = () => {
     setIsDropdownVisible(true);
@@ -24,8 +23,10 @@ export default function Header() {
     setIsAnimating(false);
     const time = setTimeout(() => {
       setIsDropdownVisible(false);
-    }, 300);
+    }, 300); 
   };
+
+  const isActive = (path: string) => router.pathname === path ? 'active-link' : '';
 
   return (
     <header className="flex flex-row justify-between">
@@ -48,7 +49,7 @@ export default function Header() {
       </div>
       <div className="nav flex items-center text-sm font-semibold gap-10">
         <ul className="text-[#333] flex gap-x-5 list-none">
-            <li>
+          <li className={isActive('/')}>
             <Link href={"/"}>
               <span className="after-line">
                 {lang === "RU" ? "ГЛАВНАЯ" : "Principală"}
@@ -58,9 +59,9 @@ export default function Header() {
           <li
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
-            className="relative"
+            className={`relative ${isActive('/catalog')}`}
           >
-            <Link href={"/catalog"} className="flex flex-row relative">
+            <Link href={"/catalog/catalog"} className="flex flex-row relative">
               <span className="after-line after-line__arrow">
                 {lang === "RU" ? "КАТАЛОГ" : "Catalog"}
               </span>
@@ -77,7 +78,7 @@ export default function Header() {
                     <Link
                       key={index}
                       href={`/catalog/${item.url}`}
-                      className="my-2 after-line"
+                      className={`my-2 after-line ${router.asPath === `/catalog/${item.url}` ? 'active' : ''}`}
                     >
                       <span key={item.id}>{item.catalog}</span>
                     </Link>
@@ -86,21 +87,21 @@ export default function Header() {
               </div>
             )}
           </li>
-          <li>
+          <li className={isActive('/galereiia')}>
             <Link href={"/galereiia"}>
               <span className="after-line">
                 {lang === "RU" ? "ГАЛЕРЕЯ" : "Galerie"}
               </span>
             </Link>
           </li>
-          <li>
-            <Link href={"/o-companii"}>
+          <li className={isActive('/compania')}>
+            <Link href={"/compania"}>
               <span className="after-line">
                 {lang === "RU" ? "О КОМПАНИИ" : "Despre noi"}
               </span>
             </Link>
           </li>
-          <li>
+          <li className={isActive('/contacti')}>
             <Link href={"/contacti"}>
               <span className="after-line">
                 {lang === "RU" ? "КОНТАКТЫ" : "Contacte"}

@@ -1,9 +1,6 @@
 .after-line {
     position: relative;
     display: inline-block;
-    padding-top: 1px;
-    padding-bottom: 1px;
-    line-height: 1.2;
 
     &::after {
         content: '';
@@ -27,6 +24,21 @@
 
 .nav-hide-block {
     animation: nav-hide-block 0.3s linear forwards;
+}
+
+.active-link {
+    position: relative;
+    display: inline-block;
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background-color: #a6c4b1;
+    }
 }
 
 @keyframes nav-show-block {
