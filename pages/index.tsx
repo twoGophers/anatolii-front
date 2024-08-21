@@ -21,9 +21,6 @@ export default function Home() {
     setFullscreenImage(null);
   };
 
-  console.log(catalog);
-  
-
   return (
     <section className='home '>
 

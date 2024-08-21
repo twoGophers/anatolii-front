@@ -27,7 +27,6 @@ export default function Header() {
   };
 
   const isActive = (path: string) => router.pathname === path ? 'active-link' : '';
-
   return (
     <header className="flex flex-row justify-between">
       <div className="flex flex-row items-center gap-9 columns-3">
@@ -61,7 +60,7 @@ export default function Header() {
             onMouseLeave={handleMouseLeave}
             className={`relative ${isActive('/catalog')}`}
           >
-            <Link href={"/catalog/catalog"} className="flex flex-row relative">
+            <Link href={"/catalog"} className="flex flex-row relative">
               <span className="after-line after-line__arrow">
                 {lang === "RU" ? "КАТАЛОГ" : "Catalog"}
               </span>
