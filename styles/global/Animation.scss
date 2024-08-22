@@ -18,3 +18,17 @@
     }
   }
   
+  .container-animation {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  
+  .fade-out {
+    opacity: 0.3;
+    transform: scale(0.95);
+  }
+  
+  .fade-in {
+    opacity: 1;
+    transform: scale(1);
+  }
+  

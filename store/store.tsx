@@ -1,8 +1,8 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
-import testReducer from './slices/test';
+import ui from './slices/ui';
 
 const rootReducer = combineReducers({
-  test: testReducer,
+  ui: ui,
 });
 
 export const store = configureStore({

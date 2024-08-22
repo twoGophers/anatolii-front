@@ -1,110 +1,86 @@
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import React from 'react';
+
+import React, { useState } from 'react';
 import Icon from "@/components/Icons/Icon";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import Catalog from '../Catalog/Catalog';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { useLang } from '@/hooks/useLang ';
+import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 
 export default function CategoryaList() {
-  const router = useRouter();
-  
-  const lang: 'RU' | 'RO' = 'RU';
+  const { isLangLoaded } = useLang();
+  const lang = useAppSelector((state) => state.ui.ui);
 
-  const breadcrumbLabels = {
-    RU: {
-      home: 'Главная',
-      catalog: 'Каталог',
-    },
-    RO: {
-      home: 'Acasă',
-      catalog: 'Catalog',
-    },
+  const [activeIcon, setActiveIcon] = useState('nine');
+
+  const handleIconClick = (iconName: any) => {
+    setActiveIcon(iconName);
+    localStorage.setItem('icon', iconName);
   };
 
-  const pathnames = router.asPath.split('/').filter(x => x);
-
-  const getBreadcrumbs = () => {
-    let breadcrumbs = [
-      { label: breadcrumbLabels[lang].home, href: '/' },
-    ];
-
-    if (pathnames.length > 0) {
-      breadcrumbs.push({
-        label: breadcrumbLabels[lang].catalog,
-        href: '/catalog',
-      });
-
-      pathnames.forEach((pathname, index) => {
-        if (index > 0) {
-          const href = `/${pathnames.slice(0, index + 1).join('/')}`;
-          breadcrumbs.push({
-            label: pathname.charAt(0).toUpperCase() + pathname.slice(1),
-            href,
-          });
-        }
-      });
-    }
-
-    return breadcrumbs;
-  };
+  if (!isLangLoaded) {
+    return null;
+  }
 
   return (
     <section>
-      <div className='flex w-full justify-between'>
-        <div className="crumbs">
-          <nav>
-            <ol className="breadcrumb">
-              {getBreadcrumbs().map((crumb, index) => (
-                <li key={index} className="breadcrumb-item">
-                  {index === getBreadcrumbs().length - 1 ? (
-                    <span>{crumb.label}</span>
-                  ) : (
-                    <Link href={crumb.href}>{crumb.label}</Link>
-                  )}
-                </li>
-              ))}
-            </ol>
-          </nav>
-        </div>
+      <div className='flex w-full justify-between text-sm'>
+        <Breadcrumbs />
         <div className="filter flex flex-row gap-x-10">
           <div>
             Показать : 
-            <span> 20 </span> /
-            <span> 40 </span> /
-            <span> 60 </span>
+            <span className={`${activeIcon === 'nine' && 'font-bold'}`}> 20 </span> /
+            <span className={`${activeIcon === 'fourteen' && 'font-bold'}`}> 40 </span> /
+            <span className={`${activeIcon === 'tventyfive' && 'font-bold'}`}> 60 </span>
           </div>
           <div className='flex flex-row gap-x-4'>
-            <span className='cursor-pointer'>
-              <Icon icon={'nine'} /> 
+            <span
+              className='cursor-pointer'
+              onClick={() => handleIconClick('nine')}
+            >
+              <Icon icon='nine' fill={activeIcon === 'nine'} />
             </span>
-            <span className='cursor-pointer'>
-              <Icon icon={'fourteen'} /> 
+            <span
+              className='cursor-pointer'
+              onClick={() => handleIconClick('fourteen')}
+            >
+              <Icon icon='fourteen' fill={activeIcon === 'fourteen'} />
             </span>
-            <span className='cursor-pointer'>
-              <Icon icon={'tventyfive'} /> 
+            <span
+              className='cursor-pointer'
+              onClick={() => handleIconClick('tventyfive')}
+            >
+              <Icon icon='tventyfive' fill={activeIcon === 'tventyfive'} />
             </span>
           </div>
           <div>
             <div>
-              <select
+            <select
                 name="orderby"
                 className="orderby border-b-2 border-solid border-[#a6c4b1] cursor-pointer"
-                aria-label="Заказ в магазине"
                 defaultValue="menu_order"
               >
-                <option value="menu_order">Исходная сортировка</option>
-                <option value="popularity">По популярности</option>
-                <option value="rating">По рейтингу</option>
-                <option value="date">Сортировка по более позднему</option>
-                <option value="price">Цены: по возрастанию</option>
-                <option value="price-desc">Цены: по убыванию</option>
+                <option value="menu_order">
+                  {lang === "RU" ? "Исходная сортировка" : "Sortare inițială"}
+                </option>
+                <option value="popularity">
+                  {lang === "RU" ? "По популярности" : "După popularitate"}
+                </option>
+                <option value="date">
+                  {lang === "RU" ? "Сортировка по более позднему" : "Sortare după cele mai recente"}
+                </option>
+                <option value="price">
+                  {lang === "RU" ? "Цены: по возрастанию" : "Prețuri: în ordine crescătoare"}
+                </option>
+                <option value="price-desc">
+                  {lang === "RU" ? "Цены: по убыванию" : "Prețuri: în ordine descrescătoare"}
+                </option>
               </select>
             </div>
           </div>
         </div>
       </div>
       <div>
-        Catalog
+        <Catalog lang={lang} />
       </div>
     </section>
   );

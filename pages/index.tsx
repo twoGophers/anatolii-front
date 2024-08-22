@@ -2,14 +2,15 @@ import { useEffect, useState } from 'react';
 import catalog from '@/db/catalog.json';
 import Image from "next/image";
 import Link from 'next/link';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+
 
 // Swiper
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
 
 export default function Home() {
-
-  let lang = "RU";
+  const lang = useAppSelector((state) => state.ui.ui)
 
   const [fullscreenImage, setFullscreenImage] = useState(null);
 

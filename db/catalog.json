@@ -13,72 +13,25 @@
                 "name": "Мебель для террасы",
                 "nameMD": "Mobilier pentru terasă",
                 "url": "ratan-terasa",
-                "image": "home/2-1.jpg",
-                "items": [
-                    {
-                        "id": 1,
-                        "name": "Кофе молотый",
-                        "nameMD": "Cafea molet",
-                        "price": 450,
-                        "description": "Lorem ipsum dolor sit amet, consectet",
-                        "image": "https://sunyard.md/wp-content/uploads/2023/10/20231017_155009.jpg"
-                    }, {
-                        "id": 2,
-                        "name": "Кофе эспрессо",
-                        "nameMD": "Cafea espresso",
-                        "price": 500,
-                        "description": "Lorem ipsum dolor sit amet, consectet",
-                        "image": "https://sunyard.md/wp-content/uploads/2023/10/IMG-20230623-WA0003.jpg"
-                    }
-                ]
+                "image": "home/2-1.jpg"
             }, {
                 "id": 2,
                 "name": "Мебель для беседки",
                 "nameMD": "Mobilier pentru foișor",
                 "url": "ratan-gazebos",
-                "image": "home/2-2.jpg",
-                "items": [
-                    {
-                        "id": 1,
-                        "name": "Комод в стиле ��ОФТ",
-                        "nameMD": "Comod stil LOFT",
-                        "price": 12000,
-                        "description": "Lorem ipsum dolor sit amet, consectet",
-                        "image": "https://sunyard.md/wp-content/uploads/2023/10/20231017_155040.jpg"
-                    }
-                ]
+                "image": "home/2-2.jpg"
             }, {
                 "id": 3,
                 "name": "Мебель для сауны",
                 "nameMD": "Mobilier pentru saună",
                 "url": "ratan-sauna",
-                "image": "home/2-3.jpg",
-                "items": [
-                    {
-                        "id": 1,
-                        "name": "Мягкий диван для детей",
-                        "nameMD": "Divan de ghea pentru copii",
-                        "price": 5000,
-                        "description": "Lorem ipsum dolor sit amet, consectet",
-                        "image": "https://sunyard.md/wp-content/uploads/2023/10/20231017_154942.jpg"
-                    }
-                ]
+                "image": "home/2-3.jpg"
             }, {
                 "id": 4,
                 "name": "Садовая мебель",
                 "nameMD": "Mobilier pentru grădină",
                 "url": "ratan-garden",
-                "image": "home/2-4.jpg",
-                "items": [
-                    {
-                        "id": 1,
-                        "name": "Мягкий кровать для взрослых",
-                        "nameMD": "Croază de ghea pentru adulti",
-                        "price": 10000,
-                        "description": "Lorem ipsum dolor sit amet, consectet",
-                        "image": "https://sunyard.md/wp-content/uploads/2023/10/20231017_154958.jpg"
-                    }
-                ]
+                "image": "home/2-4.jpg"
             }
         ]
     }, {
@@ -95,65 +48,25 @@
                 "name": "Столы",
                 "nameMD": "Mese",
                 "url": "loft-mese",
-                "image": "home/3-1.jpg",
-                "items": [
-                    {
-                        "id": 1,
-                        "name": "��каф для книг",
-                        "nameMD": "Scutere pentru carti",
-                        "price": 15000,
-                        "description": "Lorem ipsum dolor sit amet, consectet",
-                        "image": "https://sunyard.md/wp-content/uploads/2023/10/20231017_154923.jpg"
-                    }
-                ]
+                "image": "home/3-1.jpg"
             }, {
                 "id": 2,
                 "name": "Стеллажи",
                 "nameMD": "Rafturi",
                 "url": "loft-rafturi",
-                "image": "home/3-2.jpg",
-                "items": [
-                    {
-                        "id": 1,
-                        "name": "Стол в стиле ��ОФТ",
-                        "nameMD": "Stole stil LOFT",
-                        "price": 20000,
-                        "description": "Lorem ipsum dolor sit amet, consectet",
-                        "image": "https://sunyard.md/wp-content/uploads/2023/10/20231017_154937.jpg"
-                    }
-                ]
+                "image": "home/3-2.jpg"
             }, {
                 "id": 3,
                 "name": "Офисная мебель",
                 "nameMD": "Mobilă de birou",
                 "url": "loft-birou",
-                "image": "home/3-3.jpg",
-                "items": [
-                    {
-                        "id": 1,
-                        "name": "Стол в стиле ��ОФТ",
-                        "nameMD": "Stole stil LOFT",
-                        "price": 15000,
-                        "description": "Lorem ipsum dolor sit amet, consectet",
-                        "image": "https://sunyard.md/wp-content/uploads/2023/10/20231017_154947.jpg"
-                    }
-                ]
+                "image": "home/3-3.jpg"
             }, {
                 "id": 4,
                 "name": "Офисная мебель",
                 "nameMD": "Mobilă de birou",
                 "url": "loft-birou",
-                "image": "home/3-3.jpg",
-                "items": [
-                    {
-                        "id": 1,
-                        "name": "Стол в стиле ��ОФТ",
-                        "nameMD": "Stole stil LOFT",
-                        "price": 15000,
-                        "description": "Lorem ipsum dolor sit amet, consectet",
-                        "image": "https://sunyard.md/wp-content/uploads/2023/10/20231017_154947.jpg"
-                    }
-                ]
+                "image": "home/3-3.jpg"
             }
         ]
     }, {
@@ -169,17 +82,7 @@
                 "id": 1,
                 "name": "Столы из дерева",
                 "nameMD": "Stole de la pine",
-                "url": "Stole-pine",
-                "items": [
-                    {
-                        "id": 1,
-                        "name": "Стол из дерева в стиле ��ОФТ",
-                        "nameMD": "Stole de la pine stil LOFT",
-                        "price": 10000,
-                        "description": "Lorem ipsum dolor sit amet, consectet",
-                        "image": "https://sunyard.md/wp-content/uploads/2023/10/20231017_154951.jpg"
-                    }
-                ]
+                "url": "stole-pine"
             }
         ]    
     }, {
@@ -195,17 +98,7 @@
                 "id": 1,
                 "name": "Столы из камня",
                 "nameMD": "Stole de la pierre",
-                "url": "Stole-pierre",
-                "items": [
-                    {
-                        "id": 1,
-                        "name": "Стол из камня в стиле ��ОФТ",
-                        "nameMD": "Stole de la pierre stil LOFT",
-                        "price": 8000,
-                        "description": "Lorem ipsum dolor sit amet, consectet",
-                        "image": "https://sunyard.md/wp-content/uploads/20"
-                    }
-                ]
+                "url": "stole-pierre"
             }
         ]
     }
