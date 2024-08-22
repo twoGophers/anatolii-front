@@ -1,21 +1,52 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Icon from "@/components/Icons/Icon";
 import Catalog from '../Catalog/Catalog';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { useLang } from '@/hooks/useLang ';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
+import { useRouter } from 'next/router';
+
+interface URL {
+  main: string;
+  mainUrl: string;
+  catalogMain: string;
+  catalogMainUrl: string;
+  catalog: any;
+  catalogUrl: string | undefined;
+}
 
 export default function CategoryaList() {
+  const router = useRouter()
   const { isLangLoaded } = useLang();
   const lang = useAppSelector((state) => state.ui.ui);
-
+  const [urlBread, setUrlBread] = useState<URL | undefined>(undefined);
   const [activeIcon, setActiveIcon] = useState('nine');
 
   const handleIconClick = (iconName: any) => {
     setActiveIcon(iconName);
     localStorage.setItem('icon', iconName);
   };
+
+  useEffect(() => {
+    let url: URL = {
+      main: lang === "RU" ? 'Главная' : 'Principal',
+      mainUrl: '/',
+  
+      catalogMain: lang === "RU" ? 'Каталог' : 'Catalog',
+      catalogMainUrl: '/catalog/catalog',
+  
+      catalog: localStorage.getItem('catalogName'),
+      catalogUrl: `/catalog/${router.query.url}`,
+  
+    }
+
+    console.log(router);
+    
+  
+    setUrlBread(url);
+  }, [router]);
+  
 
   if (!isLangLoaded) {
     return null;
@@ -24,7 +55,7 @@ export default function CategoryaList() {
   return (
     <section>
       <div className='flex w-full justify-between text-sm'>
-        <Breadcrumbs />
+        <Breadcrumbs bread={urlBread} />
         <div className="filter flex flex-row gap-x-10">
           <div>
             Показать : 

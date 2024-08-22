@@ -1,5 +1,5 @@
 [
-    {
+   {
         "id": 1,
         "catalog": "Мебель из ротанга",
         "catalogMD": "Mobilier din ratan",
@@ -34,7 +34,7 @@
                 "image": "home/2-4.jpg"
             }
         ]
-    }, {
+    },  {
         "id": 2,
         "catalog": "Мебель в стиле ЛОФТ",
         "catalogMD": "Mobilier stil LOFT",

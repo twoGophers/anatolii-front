@@ -61,6 +61,7 @@ const items = [
         image: ['item41.jpg'],
         catalog: "Мебель из ротанга",
         catalogMD: "Mobilier din ratan",
+        urlCatalog: "",
         name: "Мебель для террасы",
         nameMD: "Comoduri de la pierre",
         url: "stole-pierre-5"

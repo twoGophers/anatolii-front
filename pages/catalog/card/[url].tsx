@@ -2,6 +2,7 @@
 import { useRouter } from 'next/router';
 import Breadcrumbs from '@/components/Breadcrumbs/Breadcrumbs';
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
 const items = [
     {
         id: 1,
@@ -58,24 +59,69 @@ const items = [
         description: 'Комод изготовлен из искусственного ротанга, который обладает высоким качеством и легкостью использования.',
         descriptionRO: 'Comodurile din ratan sunt realizate manual, oferind o calitate ��i usabilitate impresionante.',
         image: ['item41.jpg'],
+
         catalog: "Мебель из ротанга",
         catalogMD: "Mobilier din ratan",
-        name: "Мебель для террасы",
-        nameMD: "Comoduri de la pierre",
-        url: "stole-pierre-5"
+        catalogUrl: "ratan",
+
+        category: "Мебель для террасы",
+        categoryMD: "Comoduri de la pierre",
+        categoryUrl: "ratan-terasa",
+
+        url: "stole-pierre-5",
+        
     }
-]
+];
+
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+
+
+interface URL {
+  main: string;
+  mainUrl: string;
+  catalogMain: string;
+  catalogMainUrl: string;
+  catalog: string | undefined;
+  catalogUrl: string | undefined;
+  category: string | undefined;
+  categoryUrl: string| undefined;
+  itemName: string | undefined;
+}
 
 export default function ProductCard() {
   const router = useRouter();
   const { url } = router.query;
+  const lang = useAppSelector((state) => state.ui.ui);
+  const [urlBread, setUrlBread] = useState<URL | undefined>(undefined);
+
   const item = items.find((item) => item.url === url);
+
+
+  useEffect(() => {
+    let url: URL = {
+      main: lang === "RU" ? 'Главная' : 'Principal',
+      mainUrl: '/',
+  
+      catalogMain: lang === "RU" ? 'Каталог' : 'Catalog',
+      catalogMainUrl: '/catalog',
+  
+      catalog: lang === "RU" ? item?.catalog : item?.catalogMD,
+      catalogUrl: `/catalog/${item?.catalogUrl}`,
+  
+      category: lang === "RU" ? item?.category : item?.categoryMD,
+      categoryUrl: `/catalog/${item?.categoryUrl}`,
+  
+      itemName: item?.title
+    }
+  
+    setUrlBread(url);
+  }, [router]);
 
   if (!item) return <div>Product not found</div>;
 
   return (
     <div>
-      <Breadcrumbs />
+      <Breadcrumbs bread={urlBread} />
       <h1>{item.title}</h1>
       <div className="w-full pt-[100%] relative overflow-hidden">
         <Image

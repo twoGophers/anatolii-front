@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import data from "@/db/catalog.json";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
@@ -14,9 +14,15 @@ export default function CategoriaNav() {
 
   const lang = useAppSelector((state) => state.ui.ui);
 
-  const handleToggle = (index: number) => {
+  const handleToggle = (index: number, item: string) => {
     setOpenIndex(openIndex === index ? null : index);
+    localStorage.setItem('catalogName', item);
   };
+
+  const handleToggleSub = (item: string) => {
+    localStorage.setItem('catalogName', item);
+  }
+
 
   if (!isLangLoaded) {
     return null;
@@ -30,7 +36,7 @@ export default function CategoriaNav() {
           <li key={index} className="border-gray-300">
             <div 
               className="flex justify-between items-center py-2 cursor-pointer"
-              onClick={() => handleToggle(index)}
+              onClick={() => handleToggle(index, item.catalog)}
             >
               <Link href={`${item.url}`}><span className={`text-base ${item.url === router.query.url && 'text-black font-semibold'}`}>{ lang === "RU" ? item.catalog : item.catalogMD }</span></Link>
               <span>
@@ -44,7 +50,10 @@ export default function CategoriaNav() {
               {item.items && (
                 <ul className="pl-4">
                   {item?.items.map((subItem) => (
-                    <li key={subItem.id} className={`text-base py-1 text-base ${subItem.url === router.query.url && 'text-black font-semibold'}`}><Link href={`${subItem.url}`}>{ lang === "RU" ? subItem.name : subItem.nameMD }</Link></li>
+                    <li key={subItem.id} className={`text-base py-1 text-base ${subItem.url === router.query.url && 'text-black font-semibold'}`}>
+                      <Link href={`${subItem.url}`} onClick={() => handleToggleSub(lang === "RU" ? subItem.name : subItem.nameMD)}>
+                        { lang === "RU" ? subItem.name : subItem.nameMD }
+                      </Link></li>
                   ))}
                 </ul>
               )}
