@@ -23,7 +23,7 @@ export default function Home() {
   };
 
   return (
-    <section className='home '>
+    <section className='home container'>
 
         {/* First block */}
         <div className="home-group-1 grid grid-cols-2 grid-rows-2 gap-5">

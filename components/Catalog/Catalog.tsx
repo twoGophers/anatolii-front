@@ -70,18 +70,11 @@ const items = [
 
 export default function Catalog( {lang}: any ) {
     const { isLangLoaded } = useLang();
-    const [ countItems, setCountItems ] = useState(3);
+    const [ countItems, setCountItems ] = useState(localStorage.getItem("icon"));
 
     useEffect(() => {
         let icon = localStorage.getItem('icon');
-
-        if(icon === 'nine') {
-            setCountItems(3);
-        } else if(icon === 'fourteen') {
-            setCountItems(4);
-        } else if(icon === 'tventyfive') {
-            setCountItems(5);
-        }
+        setCountItems(icon);
 
     }, [localStorage.getItem('icon')]);
 

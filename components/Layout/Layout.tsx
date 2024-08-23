@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useActionState, useEffect, useState } from "react";
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks';
 export default function Layout({ children }: { children: React.ReactNode }) {
   const lang = useAppSelector((state) => state.ui.ui);
   const [animationClass, setAnimationClass] = useState<string>('');
+  const modal = useAppSelector((state) => state.ui.modal);
 
   useEffect(() => {
     setAnimationClass('fade-out');
@@ -17,12 +18,18 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   }, [lang]);
 
   return (
-    <div className={`container container-animation ${animationClass}`}>
-      <Header />
-      <div className="main">
-        {children}
+    <div>
+      <div className={`container-animation ${animationClass}`}>
+        <div className="container">
+          <Header />
+        </div>
+        <div className="main">
+          {children}
+        </div>
+        <div className="container">
+          <Footer />
+        </div>
       </div>
-      <Footer />
     </div>
   );
 }

@@ -3,7 +3,7 @@ import React from 'react';
 export default function Icon({ icon, fill }: any) {
   return (
     <div>
-      {icon === 'nine' && (
+      {icon === 3 && (
         <svg
           version='1.1'
           id='Layer_1'
@@ -27,7 +27,7 @@ export default function Icon({ icon, fill }: any) {
           <rect x='14' y='14' width='5' height='5'></rect>
         </svg>
       )}
-      {icon === 'fourteen' && (
+      {icon === 4 && (
         <svg
           version='1.1'
           id='Layer_1'
@@ -58,7 +58,7 @@ export default function Icon({ icon, fill }: any) {
           <rect x='15' y='10' width='4' height='4'></rect>
         </svg>
       )}
-      {icon === 'tventyfive' && (
+      {icon === 5 && (
         <svg
           version='1.1'
           id='b12'

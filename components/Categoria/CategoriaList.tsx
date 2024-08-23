@@ -21,7 +21,7 @@ export default function CategoryaList() {
   const { isLangLoaded } = useLang();
   const lang = useAppSelector((state) => state.ui.ui);
   const [urlBread, setUrlBread] = useState<URL | undefined>(undefined);
-  const [activeIcon, setActiveIcon] = useState('nine');
+  const [activeIcon, setActiveIcon] = useState<any>(null);
 
   const handleIconClick = (iconName: any) => {
     setActiveIcon(iconName);
@@ -41,11 +41,20 @@ export default function CategoryaList() {
   
     }
 
-    console.log(router);
-    
-  
     setUrlBread(url);
   }, [router]);
+
+  useEffect(() => {
+    localStorage.setItem('icon', '3');
+  }, [])
+
+  
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedIcon = localStorage.getItem('icon');
+      setActiveIcon( typeof storedIcon === 'string' && parseInt(storedIcon));
+    }
+  }, []);
   
 
   if (!isLangLoaded) {
@@ -59,28 +68,28 @@ export default function CategoryaList() {
         <div className="filter flex flex-row gap-x-10">
           <div>
             Показать : 
-            <span className={`${activeIcon === 'nine' && 'font-bold'}`}> 20 </span> /
-            <span className={`${activeIcon === 'fourteen' && 'font-bold'}`}> 40 </span> /
-            <span className={`${activeIcon === 'tventyfive' && 'font-bold'}`}> 60 </span>
+            <span className={`${activeIcon === 3 && 'font-bold'}`}> 20 </span> /
+            <span className={`${activeIcon === 4 && 'font-bold'}`}> 40 </span> /
+            <span className={`${activeIcon === 5 && 'font-bold'}`}> 60 </span>
           </div>
           <div className='flex flex-row gap-x-4'>
             <span
               className='cursor-pointer'
-              onClick={() => handleIconClick('nine')}
+              onClick={() => handleIconClick(3)}
             >
-              <Icon icon='nine' fill={activeIcon === 'nine'} />
+              <Icon icon={3} fill={activeIcon === 3} />
             </span>
             <span
               className='cursor-pointer'
-              onClick={() => handleIconClick('fourteen')}
+              onClick={() => handleIconClick(4)}
             >
-              <Icon icon='fourteen' fill={activeIcon === 'fourteen'} />
+              <Icon icon={4} fill={activeIcon === 4} />
             </span>
             <span
               className='cursor-pointer'
-              onClick={() => handleIconClick('tventyfive')}
+              onClick={() => handleIconClick(5)}
             >
-              <Icon icon='tventyfive' fill={activeIcon === 'tventyfive'} />
+              <Icon icon={5} fill={activeIcon === 5} />
             </span>
           </div>
           <div>
