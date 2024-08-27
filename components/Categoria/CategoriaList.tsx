@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { useLang } from '@/hooks/useLang ';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 import { useRouter } from 'next/router';
+import HeadComponent from '../Head/Head';
 
 interface URL {
   main: string;
@@ -63,6 +64,13 @@ export default function CategoryaList() {
 
   return (
     <section>
+        {/* CEO */}
+        <HeadComponent
+          title={`${urlBread?.catalog}`}
+          description={`${urlBread?.catalogUrl}`}
+          url={`http://localhost:3000/catalog/${router.query.url}`}
+        />
+        {/* CEO */}
       <div className='flex w-full justify-between text-sm'>
         <Breadcrumbs bread={urlBread} />
         <div className="filter flex flex-row gap-x-10">

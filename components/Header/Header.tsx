@@ -56,7 +56,7 @@ export default function Header() {
         </Link>
         <Link
           href="tel:+37367346700"
-          className="flex flex-row text-[#a6c4b1] text-base"
+          className="flex flex-row text-[#a6c4b1] text-base items-center"
         >
           <FontAwesomeIcon icon={faPhone} className="w-4" />
           +37367346700

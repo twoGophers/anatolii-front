@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks';
 // Swiper
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
+import HeadComponent from '@/components/Head/Head';
 
 export default function Home() {
   const lang = useAppSelector((state) => state.ui.ui)
@@ -24,6 +25,12 @@ export default function Home() {
 
   return (
     <section className='home container'>
+
+        <HeadComponent
+          title={'SUNYARD'}
+          description={'Мебель на заказ'}
+          url={'http://localhost:3000/'}
+        />
 
         {/* First block */}
         <div className="home-group-1 grid grid-cols-2 grid-rows-2 gap-5">

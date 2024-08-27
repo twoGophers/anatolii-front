@@ -2,7 +2,11 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   ui: typeof window !== 'undefined' && localStorage.getItem('lang') ? localStorage.getItem('lang') : "RU",
-  modal: false
+  modalFull: {
+    show: false,
+    index: null,
+    images: [],
+  },
 };
 
 const uiSlice = createSlice({
@@ -12,11 +16,12 @@ const uiSlice = createSlice({
     updateLang: (state, action) => {
       state.ui = action.payload;
     },
-    modalStyle: (state, action) => {
-      state.modal = action.payload;
+    setModalFull: (state, action) => {
+      state.modalFull = action.payload;
+      
     }
   },
 });
 
-export const { updateLang, modalStyle } = uiSlice.actions;
+export const { updateLang, setModalFull } = uiSlice.actions;
 export default uiSlice.reducer;

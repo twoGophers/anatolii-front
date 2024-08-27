@@ -18,3 +18,16 @@
     text-transform: uppercase;
     font-weight: 700;
   }
+
+  .ymaps-2-1-79-map {
+    width: 100%;
+    height: 300px !important;
+    .ymaps-2-1-79-inner-panes {
+      width: 100%;
+      height: 100%;
+    }
+    .ymaps-2-1-79-events-pane {
+      width: 100%;
+      height: 100%;
+    }
+  }

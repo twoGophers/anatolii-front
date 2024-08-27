@@ -1,8 +1,14 @@
-// pages/catalog/card/[id].tsx
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import Breadcrumbs from '@/components/Breadcrumbs/Breadcrumbs';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import Margin from '@/components/Untils/Margin';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Thumbs, Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
+import { setModalFull } from '@/store/slices/ui';
+import Link from 'next/link';
+import HeadComponent from '@/components/Head/Head';
 const items = [
     {
         id: 1,
@@ -18,7 +24,7 @@ const items = [
         url: "stole-pierre-1"
     }, {
         id: 2,
-        title: 'Ящик ротанговый',
+        title: 'Ящик ротанговый 1',
         price: 5000,
         description: 'Ящик изготовлен из металлического каркаса, покрыт порошковой краской, сплетен вручную из искусственного ротанга.',
         descriptionMD: 'Cutia este realizată dintr-un cadru metalic, acoperit cu vopsea pudră, țesut manual din ratan artificial.',
@@ -57,7 +63,7 @@ const items = [
         title: 'Комод из ротанга',
         titleMD: 'Comodă din ratan',
         price: 7000,
-        description: 'Комод изготовлен из искусственного ротанга, который обладает высоким качеством и легкостью использования.',
+        description: 'Комод изготовлен',
         descriptionMD: 'Comodurile din ratan sunt realizate manual, oferind o calitate ��i usabilitate impresionante.',
         image: ['item41.jpg'],
 
@@ -74,12 +80,6 @@ const items = [
     }
 ];
 
-import Margin from '@/components/Untils/Margin';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Thumbs, Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
-import { modalStyle } from '@/store/slices/ui';
-import Link from 'next/link';
 
 
 interface URL {
@@ -102,7 +102,6 @@ export default function ProductCard() {
   const [urlBread, setUrlBread] = useState<URL | undefined>(undefined);
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [activeSlideIndex, setActiveSlideIndex] = useState(0);
 
   const item = items.find((item) => item.url === url);
 
@@ -128,46 +127,46 @@ export default function ProductCard() {
   }, [router, lang]);
 
   const openFullscreen = (index: any) => {
-    setActiveSlideIndex(index);
-    setIsFullscreen(true);
-    dispatch(modalStyle(true));
+    dispatch(setModalFull({ show: true, index: index, images: item?.image }));
   };
 
-  const closeFullscreen = () => {
-    setIsFullscreen(false);
-    dispatch(modalStyle(false));
-  };
+  // const closeFullscreen = () => {
+  //   setIsFullscreen(false);
+  //   dispatch(modalStyle(false));
+  // };
+
+  useEffect(() => {
+    if (isFullscreen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isFullscreen]);
   
 
   if (!item) return <div>Product not found</div>;
 
   return (
     <>
-      <div className='card container'>
-        {/* <Margin /> */}
+      <div className='card-item container'>
+        {/* CEO */}
+        <HeadComponent
+          title={`${urlBread?.itemName}`}
+          description={`${lang === "RU" ? item.description : item.descriptionMD}`}
+          url={`http://localhost:3000/catalog/card/${router.query.url}`}
+        />
+        {/* CEO */}
+        <Margin />
         <Breadcrumbs bread={urlBread} />
-
-        {/*      <h1>{item.title}</h1>
-        <div className="w-full pt-[100%] relative overflow-hidden">
-          <Image
-            src={`/items/${item.image[0]}`}
-            alt={item.title}
-            fill
-            quality={100}
-            priority
-            className='object-cover center'
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          />
-        </div>
-        <p className='text-[#a6c4b1] text-base font-medium'>
-          {new Intl.NumberFormat('ro-RO', { style: 'currency', currency: 'MDL' }).format(item.price)}
-        </p> */}
-      <div className='w-full flex flex-row gap-x-7 justify-between mt-2'>
-        <div className='w-1/2 border flex flex-row gap-x-6'>
+        <div className='w-full flex flex-row gap-x-7 justify-between mt-2'>
+        <div className='w-1/2 flex flex-row gap-x-6'>
           {/* Thumbs Swiper */}
           <div className='w-1/4'>
             <Swiper
-              onSwiper={setThumbsSwiper} // Set the thumbsSwiper instance
+              onSwiper={() => setThumbsSwiper} // Set the thumbsSwiper instance
               modules={[Thumbs, Navigation, Pagination, Scrollbar, A11y]}
               spaceBetween={10}
               slidesPerView={3}
@@ -220,8 +219,8 @@ export default function ProductCard() {
             </Swiper>
           </div>
         </div>
-        <div className='w-1/2 border flex flex-col content-between'>
-              <h1 className='text-3xl font-bold '>{ lang === "RU" ? item.title : item.titleMD }</h1>
+        <div className='w-1/2 flex flex-col content-between'>
+              <h1 className='text-3xl font-bold '>{ lang === "RU" ? item.title : item.titleMD }</h1> <span>Art: 1</span>
               <p className='text-[#a6c4b1] text-2xl font-medium mt-2'>
                 {new Intl.NumberFormat('ro-RO', { style: 'currency', currency: 'MDL' }).format(item.price)}
               </p>
@@ -232,40 +231,54 @@ export default function ProductCard() {
                 <Link className='text-gray-500' href={`/catalog/${item?.catalogUrl}`}>{lang === "RU" ? item?.catalog : item?.catalogMD}</Link>, 
                 <Link className='ml-2 text-gray-500' href={`/catalog/${item?.categoryUrl}`}>{lang === "RU" ? item?.category : item?.categoryMD}</Link>
               </p>
-              <Link className='text-gray-500' href={'google.com'}>Наш шоурум - Г. Кишинёв, Ул. Надежда Руссо 17, Торговый центр "Decor Park" 2 этаж</Link>
+              <Link className='text-gray-500' href={'google.com'}>Наш шоурум - Г. Кишинёв, Ул. Надежда Руссо 17, Торговый центр 2 этаж</Link>
         </div>
-      </div>
+        
+        </div>
+      
 
       </div>
-      {isFullscreen && (
-          <div className="fixed top-0 w-full z-50 bg-black bg-opacity-75 flex justify-center items-center">
-            <div className="relative w-full h-full">
-              <button
-                className="absolute top-4 right-4 text-white text-3xl z-50"
-                onClick={closeFullscreen}
-              >
-                &times;
-              </button>
-              <Swiper
-                modules={[Thumbs, Navigation, Pagination, Scrollbar, A11y]}
-                navigation
-                initialSlide={activeSlideIndex}
-                className="swiper-fullscreen"
-              >
-                {items[1].image.map((item, index) => (
-                  <SwiperSlide key={index} className='relative w-full h-full'>
-                    <Image 
-                      src={`/items/${item}`} 
-                      alt={item} 
-                      fill
-                      className='object-contain '
-                    />
-                  </SwiperSlide>
-                ))}
-              </Swiper>
-            </div>
-          </div>
-      )}
+      <hr className='my-8' />
+      <hr className='my-8' />
+      <div className='container similar-products'>
+        <h2 className='h4-size my-5'>{ lang === "RU" ? "Похожие товары" : "Produse similare" }</h2>
+        <div>
+        <Swiper
+          modules={[Navigation, Pagination, Scrollbar, A11y]}
+          spaceBetween={10}
+          slidesPerView={4}
+          navigation
+          onSwiper={(swiper) => console.log(swiper)}
+          onSlideChange={() => console.log('slide change')}
+          className='similar-products'
+        >
+          {
+            items.map((item: any) => (
+              <SwiperSlide key={item.id} className='relative group w-full cursor-pointer'>
+                <div 
+                  className='overflow-hidden shadow-lg relative transform transition-all duration-500 ease-in-out group-hover:shadow-2xl h-[300px]'
+                >
+                  <Link href={`/catalog/card/${item.url}`}>
+                    <div className="relative w-full h-full">
+                      {item?.image && (
+                        <Image
+                          src={`/items/${item?.image[0]}`}
+                          fill
+                          priority
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                          alt="Home"
+                          className='object-cover transition-transform duration-500 ease-in-out group-hover:scale-110'
+                        />
+                      )}
+                    </div>
+                  </Link>
+                </div>
+              </SwiperSlide>
+            ))
+          }
+        </Swiper>
+        </div>
+      </div>
     </>
   );
 }
