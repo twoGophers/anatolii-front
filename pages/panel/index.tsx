@@ -67,6 +67,8 @@ export default function Panel() {
     const imageBlob = await response.blob();
     formData.append('image', imageBlob, 'image.jpg');
 
+    console.log(formData);
+    
     try {
       await dispatch(catalogMain(formData)).unwrap();
     } catch (error) {

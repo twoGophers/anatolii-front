@@ -9,14 +9,14 @@ export const catalogMain = createAsyncThunk(
   'catalog/create',
   async (formData: FormData, { rejectWithValue }) => {
     try {
-      const response = await axios.post('/catalog', formData, {
+      const response = await axios.post('/catalog/create', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
       return response.data;
     } catch (error: any) {
-      return rejectWithValue(error.response.data.message);
+      return rejectWithValue(error.response?.data?.message || 'An error occurred');
     }
   }
 );
