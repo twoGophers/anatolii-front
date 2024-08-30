@@ -1,7 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
 
-export default function HeadComponent({ title, description, url }) {
+export default function HeadComponent({ title, description, url }: any) {
   return (
     <Head>
         <title>{title}</title>

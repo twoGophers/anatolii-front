@@ -27,12 +27,12 @@ export const loginAdmin = createAsyncThunk( 'admin/login', async (credentials: {
 
 export const verifyAdmin = createAsyncThunk(
     'admin/verify',
-    async ({ token }: { token: string }, { rejectWithValue }) => {
+    async (token: any) => {
       try {
-        const response = await axios.post('/admin/verify', { token });
+        const response = await axios.post('/admin/verify', {token});
         return response.data;
       } catch (error: any) {
-        return rejectWithValue(error.response.data.message);
+        return console.log(error.response.data.message);
       }
     }
   );
