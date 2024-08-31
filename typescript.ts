@@ -1,8 +1,6 @@
 export interface Card {
     catalog: string;
     catalogMD: string;
-    title: string;         // Ensure this is present
-    titleMD: string;       // Ensure this is present
     url: string;
     image: string[];       // Ensure image is an array
     items: CatalogItem[];  // Ensure items is an array

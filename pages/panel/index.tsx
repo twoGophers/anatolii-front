@@ -40,8 +40,6 @@ export default function Panel() {
   catalogMD: '',
   urlCatalog: '',
 
-  title: '',           // Ensure title is present
-  titleMD: '',         // Ensure titleMD is present
   url: '',
   image: [],          // Initialize as an array, not null
   items: [],          // Initialize as an array
@@ -59,7 +57,6 @@ export default function Panel() {
   price: ''
   });
 
-  const [ catalogActive, setCatalogActive ] = useState<Card | null>(null);
   const [selectedImages, setSelectedImages] = useState<(string | ArrayBuffer)[]>([]);
   const [ subCatalogArr, setSubCatalogArr] = useState([]);
 
@@ -172,7 +169,7 @@ const sendSubCatalog = async (e: React.MouseEvent<HTMLButtonElement>) => {
   }
 };
 
-const resetData = (type: 'catalog' | 'subCatalog') => {
+const resetData = (type: 'catalog' | 'subCatalog' | 'card-item') => {
   if (type === 'catalog') {
     setCatalogData({
       catalog: '',
@@ -191,8 +188,30 @@ const resetData = (type: 'catalog' | 'subCatalog') => {
       url: '',
       image: null,
       imageName: ''
-    });
-  }
+    })
+  } else if( type === 'card-item') {
+      setCard({
+        catalog: '',
+        catalogMD: '',
+        urlCatalog: '',
+      
+        url: '',
+        image: [],          // Initialize as an array, not null
+        items: [],          // Initialize as an array
+        subCatalog: '',
+        subCatalogMD: '',
+        urlSubCatalog: '',
+      
+        name: '',
+        nameMD: '',
+        
+        
+        imageName: [],      // Initialize as an array, not null
+        description: '',
+        descriptionRO: '',
+        price: ''
+      })
+    }
 
   // Reset the file input
   const fileInput = document.querySelector(`.${type}`) as HTMLInputElement;
@@ -202,81 +221,78 @@ const resetData = (type: 'catalog' | 'subCatalog') => {
 };
 
 
-const handleSelectChange = (e: any) => {
-  const selectedValue = e.target.value;
-  const selectedObject = catalogAll.find((item: any) => JSON.stringify(item.items) === selectedValue);
-  setCatalogActive(selectedObject);
-
-  if (selectedObject) {
-    setCard({
-      ...card,
-      catalog: selectedObject.catalog,
-      catalogMD: selectedObject.catalogMD,
-      urlCatalog: selectedObject.url,
-    });
-  }
-};
-
-const handleSubCatalogChange = (e: any) => {
-  const selectedSubCatalog = e.target.value;
-  if (catalogActive) {
-    const sub = catalogActive.items.find((item: any) => item.name === 'name');
-    console.log(selectedSubCatalog);
-    
-    console.log("Found SubCatalog:", sub);
-  }
-  
-
-  setCard({
-    ...card,
-    subCatalog: selectedSubCatalog,
-    urlSubCatalog: selectedSubCatalog, // assuming URL of the subcatalog is the same as the value
-  });
-};
-
-const handleFileChangeCard = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const files = e.target.files;
-  if (files) {
-    const newImages: (string | ArrayBuffer)[] = [];
-    Array.from(files).forEach(file => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        if (reader.result) {
-          newImages.push(reader.result);
-          if (newImages.length === files.length) {
-            setSelectedImages(prevImages => [...prevImages, ...newImages]);
-          }
-        }
-      };
-      reader.readAsDataURL(file);
-    });
-  }
-};
-
 const handleDeleteImage = (index: number) => {
   setSelectedImages(prevImages => prevImages.filter((_, i) => i !== index));
 };
 
 const sendCard = async (e: React.MouseEvent<HTMLButtonElement>) => {
   e.preventDefault();
-  dispatch(sendCardData(card));
+
+  const formData = new FormData();
   
-}
+  formData.append('catalog', card.catalog);
+  formData.append('catalogMD', card.catalogMD);
+  formData.append('urlCatalog', card.urlCatalog);
+  formData.append('url', card.url);
+  formData.append('subCatalog', card.subCatalog);
+  formData.append('subCatalogMD', card.subCatalogMD);
+  formData.append('urlSubCatalog', card.urlSubCatalog);
+  formData.append('name', card.name);
+  formData.append('nameMD', card.nameMD);
+  formData.append('description', card.description);
+  formData.append('descriptionRO', card.descriptionRO);
+  formData.append('price', card.price);
+  
+  card.image.forEach((file, index) => {
+    formData.append(`images`, file); // Append each file
+  });
+
+  console.log(card);
+  try {
+    const data = dispatch(sendCardData(formData));
+    resetData('card-item');
+  } catch (error) {
+    console.log(error);
+    
+  }
+};
+
+const handleFileChangeCard = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const files = e.target.files;
+  if (files) {
+    const fileArray = Array.from(files);
+    setCard((prevCard: any )=> ({
+      ...prevCard,
+      image: [...prevCard.image, ...fileArray]
+    }));
+  }
+};
+
 
 const getCatalog = (e: any, item: any, catalog: any) => {
   e.preventDefault();
-  if( catalog === 'subCatalog') {
+
+  if (catalog === 'subCatalog') {
     setSubCatalogData({ ...subCatalogData, catalog: item.url });
-  } else if( catalog === 'catalogCard' ) {
-    setSubCatalogArr(item.items)
-    setCard({ ...card, urlCatalog: item.url });
-  } else if( catalog === 'subCatalogCard') {
-    setCard({ ...card, urlSubCatalog: item.url });
+  } else if (catalog === 'catalogCard') {
+    setSubCatalogArr(item.items);
+    setCard(prevCard => ({
+      ...prevCard,
+      urlCatalog: item.url,
+      catalog: item.catalog,
+      catalogMD: item.catalogMD,
+    }));
+  } else if (catalog === 'subCatalogCard') {
+    setCard(prevCard => ({
+      ...prevCard,
+      urlSubCatalog: item.url,
+      subCatalog: item.name,
+      subCatalogMD: item.nameMD,
+    }));
   }
-  
-  console.log();
-  
 }
+
+
 
 
   return (
@@ -517,7 +533,7 @@ const getCatalog = (e: any, item: any, catalog: any) => {
                     />
                   </div>
                 <div className='w-full'>
-                  <p>Описание картинки - русс</p>
+                  <p>Описание карточки товара - русс</p>
                   <textarea 
                     value={card.description} 
                     onChange={(e) => setCard({ ...card, description: e.target.value })}
@@ -525,7 +541,7 @@ const getCatalog = (e: any, item: any, catalog: any) => {
                     ></textarea>
                 </div>
                 <div className='w-full'>
-                  <p>Описание картинки - молд</p>
+                  <p>Описание карточки товара - молд</p>
                   <textarea 
                     value={card.descriptionRO} 
                     onChange={(e) => setCard({ ...card, descriptionRO: e.target.value })}
@@ -559,10 +575,11 @@ const getCatalog = (e: any, item: any, catalog: any) => {
                 <div className="w-full mb-4">
                   <p>Выбери картинки</p>
                   <input
+                    className='card-item'
                     type="file"
-                    accept="image/*" // Optional: restricts to image files
+                    accept="image/*"
                     onChange={handleFileChangeCard}
-                    multiple // Allow multiple files to be selected
+                    multiple
                   />
                   <div className="mt-4 flex flex-row flex-wrap gap-1">
                     {selectedImages.map((image, index) => (
@@ -592,7 +609,7 @@ const getCatalog = (e: any, item: any, catalog: any) => {
                   </button>
                   <button
                     type="button"
-                    onClick={() => resetData('subCatalog')}
+                    onClick={() => resetData('card-item')}
                     className='border p-2 ml-5 bg-red-200 hover:bg-green-500'
                   >
                     Сбросить

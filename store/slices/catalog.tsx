@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from '../../axios';
-
 import { Card } from '@/typescript';
 
 
@@ -14,10 +13,12 @@ const initialState = {
 
 export const sendCardData = createAsyncThunk(
   'catalog/sendCardData',
-  async (card: Card) => {
-    console.log(card);
-    
-    const response = await axios.post('/api/catalog', card);
+  async (formData: any) => {
+    const response = await axios.post('/catalog/create-card', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
     return response.data;
   }
 );
