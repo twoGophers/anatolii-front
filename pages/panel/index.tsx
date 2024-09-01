@@ -59,6 +59,7 @@ export default function Panel() {
 
   const [selectedImages, setSelectedImages] = useState<(string | ArrayBuffer)[]>([]);
   const [ subCatalogArr, setSubCatalogArr] = useState([]);
+  const [ subCatalogArrAll, setSubCatalogArrAll] = useState([]);
 
   const signIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -220,7 +221,6 @@ const resetData = (type: 'catalog' | 'subCatalog' | 'card-item') => {
   }
 };
 
-
 const handleDeleteImage = (index: number) => {
   setSelectedImages(prevImages => prevImages.filter((_, i) => i !== index));
 };
@@ -276,6 +276,8 @@ const getCatalog = (e: any, item: any, catalog: any) => {
     setSubCatalogData({ ...subCatalogData, catalog: item.url });
   } else if (catalog === 'catalogCard') {
     setSubCatalogArr(item.items);
+    console.log(item);
+    
     setCard(prevCard => ({
       ...prevCard,
       urlCatalog: item.url,
@@ -290,8 +292,18 @@ const getCatalog = (e: any, item: any, catalog: any) => {
       subCatalogMD: item.nameMD,
     }));
   }
+};
+
+const updateSubCatalog = () => {
+  if(catalogAll) {
+    const allItems = catalogAll.reduce((acc: any, catalog: any) => {
+      return [...acc, ...catalog.items];
+    }, []);
+    setSubCatalogArrAll(allItems);
+  }
 }
 
+console.log(subCatalogArrAll);
 
 
 
@@ -310,8 +322,8 @@ const getCatalog = (e: any, item: any, catalog: any) => {
       {
         isAuthenticated && verify && (
           <div className=' mt-6 flex flex-row flex-wrap'>
-            <div className=' w-1/2 mt-2'>
-              <h2 className='font-semibold text-xl'>Новая категория</h2>
+            <div className='border w-1/2 mt-2'>
+              <h2 className='font-semibold text-xl p-3'>Новая категория</h2>
               <form className='border p-4 mt-2 flex flex-col flex-wrap justify-around items-start'>
                   <div className='w-full mb-4'>
                     <p>Название каталога - русс</p>
@@ -389,8 +401,8 @@ const getCatalog = (e: any, item: any, catalog: any) => {
                 </div>
               </form>
             </div>
-            <div className=' w-1/2 mt-2'>
-              <h2 className='font-semibold text-xl'>Под категория</h2>
+            <div className='border w-1/2 mt-2'>
+              <h2 className='font-semibold text-xl p-3'>Под категория</h2>
               <form className='border p-4 mt-2 flex flex-col flex-wrap justify-around items-start'>
                   <button className='mb-3 bg-gray-200 p-2 hover:bg-green-400' onClick={(e) => uploadData(e, 'catalog')}>Обновить категорию</button>
                   <div className='border  p-1 w-full flex flex-wrap'>
@@ -463,9 +475,9 @@ const getCatalog = (e: any, item: any, catalog: any) => {
                 </div>
               </form>
             </div>
-            <div className=' w-1/2 mt-2'>
-              <h2 className='font-semibold text-xl'>Карточка товара</h2>
-              <p>Все поля обязательны</p>
+            <div className='border w-1/2 mt-2'>
+              <h2 className='font-semibold text-xl p-3'>Карточка товара</h2>
+              <p className='pl-3'>Все поля обязательны</p>
               <form className='border p-4 mt-2 flex flex-col flex-wrap justify-around items-start'>
                   <button className='mb-3 bg-gray-200 p-2 hover:bg-green-400' onClick={(e) => uploadData(e, 'catalog')}>Обновить категорию</button>
                   <p>Название каталога</p>
@@ -496,7 +508,7 @@ const getCatalog = (e: any, item: any, catalog: any) => {
                                 onClick={(e) => getCatalog(e, item, 'subCatalogCard')}
                                 className={`p-2 border rounded-md m-1 ${item?.url === card.urlSubCatalog && 'bg-green-200'}`}
                                 >
-                                {item?.title}dd
+                                {item?.name}
                               </button>
                             ))
                           }
@@ -505,12 +517,6 @@ const getCatalog = (e: any, item: any, catalog: any) => {
                        )
                       
                     }
-
-                  {
-                    // catalogItems.map((item) => (
-                    //   <p>{item}</p>
-                    // )) 
-                  }
 
                   <div className='w-full mb-4 mt-4'>
                     <p>Название товара - русс</p>
@@ -617,6 +623,57 @@ const getCatalog = (e: any, item: any, catalog: any) => {
                   <p className='text-sm text-gray-400'>Все поля должны быть заполнены</p>
                 </div>
               </form>
+            </div>
+            <div className='border w-1/2 mt-2'>
+              <div className='p-6'>
+                <h2 className='font-semibold text-xl mb-2'>Каталог</h2>
+                {
+                  catalogAll && catalogAll.map((item: any, index: number) => (
+                    <div key={index} className='flex flex-row justify-between items-center mb-3 border pl-2'>
+                      <div>{item?.title}</div>
+                      <div>
+                        <button
+                          onClick={() => deleteCatalog(index)}
+                          className='border p-2 bg-red-200 hover:bg-green-500'
+                        >
+                          Удалить
+                        </button>
+                        <button
+                          onClick={() => getCatalog(null, item, 'editCatalog')}
+                          className='border p-2 ml-2 bg-gray-200 hover:bg-green-500'
+                        >
+                          Редактировать
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                }
+              </div>
+              <div className='p-6'>
+                <h2 className='font-semibold text-xl mb-2'>Под каталог <button onClick={ updateSubCatalog } className='bg-gray-300 text-base p-2'>Обновить</button></h2>
+                {
+                  subCatalogArrAll && subCatalogArrAll.map((item: any, index: number) => (
+                    <div key={index} className='flex flex-row justify-between items-center mb-3 border pl-2'>
+                      <div>{item?.name}</div>
+                      <div>
+                        <button
+                          onClick={() => deleteCatalog(index)}
+                          className='border p-2 bg-red-200 hover:bg-green-500'
+                        >
+                          Удалить
+                        </button>
+                        <button
+                          onClick={() => getCatalog(null, item, 'editCatalog')}
+                          className='border p-2 ml-2 bg-gray-200 hover:bg-green-500'
+                        >
+                          Редактировать
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                }
+              </div>
+              
             </div>
           </div>
         )
