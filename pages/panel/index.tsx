@@ -1,9 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { loginAdmin, verifyAdmin } from '@/store/slices/admin';
-import { catalogMain, catalogItems, catalogSubCategory, catalogSubItems, sendCardData } from '@/store/slices/catalog';
-
-import { Card } from '../../typescript';
+import { catalogMain, catalogItems, catalogSubCategory, catalogSubItems, sendCardData, deleteItem, updateCatalog } from '@/store/slices/catalog';
 
 export default function Panel() {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -61,6 +59,9 @@ export default function Panel() {
   const [ subCatalogArr, setSubCatalogArr] = useState([]);
   const [ subCatalogArrAll, setSubCatalogArrAll] = useState([]);
 
+  // редактирование
+  const [ redactCatalog , setRedactCatalog ] = useState<any>([]);
+
   const signIn = async (e: React.FormEvent) => {
     e.preventDefault();
     if (inputRef.current && inputRef2.current) {
@@ -103,39 +104,41 @@ export default function Panel() {
   }, [token, dispatch]);
   
   
-
-  const sendCatalog = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const sendCatalog = async (e: React.MouseEvent<HTMLButtonElement>, isUpdate = false, id?: string) => {
     e.preventDefault();
   
-    if (!catalogData.catalog || !catalogData.catalogMD || !catalogData.title || !catalogData.titleMD || !catalogData.url || !catalogData.image) {
-      alert('Please fill all fields and select an image');
-      return;
-    }
-  
+    // Prepare form data
     const formData = new FormData();
     formData.append('catalog', catalogData.catalog);
     formData.append('catalogMD', catalogData.catalogMD);
     formData.append('title', catalogData.title);
     formData.append('titleMD', catalogData.titleMD);
     formData.append('url', catalogData.url);
-    formData.append('image', catalogData.image); // No need to convert to blob
+    if (catalogData.image) {
+      formData.append('image', catalogData.image);
+    }
   
     try {
-      const data = await dispatch(catalogMain(formData)).unwrap();
-
-      if(data) {
-        resetData('catalog')
+      let data;
+      if (isUpdate) {
+        if (!id) {
+          throw new Error('ID is required for updating catalog');
+        }
+        data = await dispatch(updateCatalog({ id, formData })).unwrap();
+      } else {
+        data = await dispatch(catalogMain(formData)).unwrap();
       }
-
+  
+      console.log('Catalog data:', data);
     } catch (error) {
-      console.error('Failed to save catalog:', error);
+      console.error(`Failed to ${isUpdate ? 'update' : 'create'} catalog:`, error);
     }
   };
 
   const uploadData = async (e: React.MouseEvent<HTMLButtonElement>, item: string) => {
     e.preventDefault();
     if( item === 'catalog') {
-      const data = await dispatch(catalogItems());
+      await dispatch(catalogItems());
     } else if (item === 'sub-catalog') {
       await dispatch(catalogSubItems());
     }
@@ -294,17 +297,35 @@ const getCatalog = (e: any, item: any, catalog: any) => {
   }
 };
 
-const updateSubCatalog = () => {
+const updateSubCatalog = (e: any) => {
+  uploadData(e, 'catalog');
   if(catalogAll) {
     const allItems = catalogAll.reduce((acc: any, catalog: any) => {
       return [...acc, ...catalog.items];
     }, []);
     setSubCatalogArrAll(allItems);
   }
-}
+};
 
-console.log(subCatalogArrAll);
+const deleteCatalog = (item: any, name: string) => {
+  let id = null;
 
+  if(name === 'catalog') {
+    id = item._id;
+  } else if( name === 'sub') {
+    id = item.url;
+  } else if( name === 'card') {
+    id = item._id;
+  };
+  if (id) {
+    console.log(id);
+    dispatch(deleteItem({ id, name }));
+  } else {
+    console.error('Invalid item or name parameter');
+  }
+};
+
+console.log(redactCatalog);
 
 
   return (
@@ -385,7 +406,7 @@ console.log(subCatalogArrAll);
                 <div className=''>
                   <button
                     type="button"
-                    onClick={sendCatalog}
+                    onClick={(e) => sendCatalog(e, false)}
                     className='border p-2 bg-gray-200 hover:bg-green-500'
                   >
                     Сохранить категорию
@@ -629,35 +650,126 @@ console.log(subCatalogArrAll);
                 <h2 className='font-semibold text-xl mb-2'>Каталог</h2>
                 {
                   catalogAll && catalogAll.map((item: any, index: number) => (
-                    <div key={index} className='flex flex-row justify-between items-center mb-3 border pl-2'>
-                      <div>{item?.title}</div>
-                      <div>
-                        <button
-                          onClick={() => deleteCatalog(index)}
-                          className='border p-2 bg-red-200 hover:bg-green-500'
-                        >
-                          Удалить
-                        </button>
-                        <button
-                          onClick={() => getCatalog(null, item, 'editCatalog')}
-                          className='border p-2 ml-2 bg-gray-200 hover:bg-green-500'
-                        >
-                          Редактировать
-                        </button>
+                    <div key={index} >
+                      <div className='flex flex-row justify-between items-center mb-3 border pl-2'>
+                        <div>{item?.title}</div>
+                          <div>
+                            <button
+                              onClick={() => deleteCatalog(item, 'catalog')}
+                              className='border p-2 bg-red-200 hover:bg-green-500'
+                            >
+                              Удалить
+                            </button>
+                            <button
+                              onClick={() => setRedactCatalog(item)}
+                              className='border p-2 ml-2 bg-gray-200 hover:bg-green-500'
+                            >
+                              Редактировать
+                            </button>
+                          </div>
                       </div>
+                      {
+                        ( redactCatalog?.url === item.url) &&
+                        (
+                          <div>
+                            <form className='mb-4 border border-red-500 p-4 mt-2 flex flex-col flex-wrap justify-around items-start'>
+                              <div className='w-full mb-4'>
+                                <p>Название каталога - русс</p>
+                                <p className='mb-2'>{item.catalog}</p>
+                                <input
+                                  placeholder='Мебель из ротанга'
+                                  type="text"
+                                  className='border p-1 w-full'
+                                  value={catalogData.catalog}
+                                  onChange={(e) => setCatalogData({ ...catalogData, catalog: e.target.value })}
+                                />
+                              </div>
+                              <div className='w-full mb-4'>
+                                <p>Название каталога - молд</p>
+                                <p className='mb-2'>{item.catalogMD}</p>
+                                <input
+                                  placeholder='Mobilier din ratan'
+                                  type="text"
+                                  className='border p-1 w-full'
+                                  value={catalogData.catalogMD}
+                                  onChange={(e) => setCatalogData({ ...catalogData, catalogMD: e.target.value })}
+                                />
+                              </div>
+                              <div className='w-full mb-4'>
+                                <p>Заголовок каталога - русс</p>
+                                <p className='mb-2'>{item.title}</p>
+                                <input
+                                  placeholder='МЕБЕЛЬ ИЗ РОТАНГА ДЛЯ ТЕРРАСЫ'
+                                  type="text"
+                                  className='border p-1 w-full'
+                                  value={catalogData.title}
+                                  onChange={(e) => setCatalogData({ ...catalogData, title: e.target.value })}
+                                />
+                              </div>
+                              <div className='w-full mb-4'>
+                                <p>Заголовок каталога - молд</p>
+                                <p className='mb-2'>{item.titleMD}</p>
+                                <input
+                                  placeholder='MOBILA DIN ROTANG PENTRU TERASĂ'
+                                  type="text"
+                                  className='border p-1 w-full'
+                                  value={catalogData.titleMD}
+                                  onChange={(e) => setCatalogData({ ...catalogData, titleMD: e.target.value })}
+                                />
+                              </div>
+                            <div className="w-full mb-4">
+                              <p>Выбери только одну картинку</p>
+                              <input
+                                type="file"
+                                className='catalog'
+                                onChange={(e) => handleFileChange(e, setCatalogData)}
+                              />
+                            </div>
+                              <div className='w-full mb-4'>
+                                <p className='mb-2'>{item.url}</p>
+                                <input
+                                  placeholder='Пример: ratan'
+                                  type="text"
+                                  className='border p-1 w-full'
+                                  value={catalogData.url}
+                                  onChange={(e) => setCatalogData({ ...catalogData, url: e.target.value })}
+                                />
+                              </div>
+                            <div className=''>
+                              <button
+                                type="button"
+                                onClick={(e) => sendCatalog(e, true, item._id)}
+                                className='border p-2 bg-gray-200 hover:bg-green-500'
+                              >
+                                Обновить категорию
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => resetData('catalog')}
+                                className='border p-2 ml-5 bg-red-200 hover:bg-green-500'
+                              >
+                                Сбросить
+                              </button>
+                              <p className='text-sm text-gray-400'>Все поля должны быть заполнены</p>
+                            </div>
+                            </form>
+                          </div>
+                        )
+                      }
                     </div>
                   ))
                 }
+                
               </div>
               <div className='p-6'>
-                <h2 className='font-semibold text-xl mb-2'>Под каталог <button onClick={ updateSubCatalog } className='bg-gray-300 text-base p-2'>Обновить</button></h2>
+                <h2 className='font-semibold text-xl mb-2'>Под каталог <button onClick={(e) => updateSubCatalog(e) } className='bg-gray-300 text-base p-2'>Обновить</button></h2>
                 {
                   subCatalogArrAll && subCatalogArrAll.map((item: any, index: number) => (
                     <div key={index} className='flex flex-row justify-between items-center mb-3 border pl-2'>
                       <div>{item?.name}</div>
                       <div>
                         <button
-                          onClick={() => deleteCatalog(index)}
+                          onClick={() => deleteCatalog(item, 'sub')}
                           className='border p-2 bg-red-200 hover:bg-green-500'
                         >
                           Удалить

@@ -1,7 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from '../../axios';
-import { Card } from '@/typescript';
 
+interface DeleteItemPayload {
+  id: number | string;
+  name: string;
+}
 
 const initialState = {
   catalog: null,
@@ -79,7 +82,33 @@ export const catalogSubItems = createAsyncThunk(
   }
 );
 
+export const deleteItem = createAsyncThunk(
+  'catalog/delete-item',
+  async ({ id, name }: { id: string; name: string }, { rejectWithValue }) => {
+    try {
+      const response = await axios.delete(`/catalog/delete/${id}?name=${name}`);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || 'An error occurred'
+      );
+    }
+  }
+);
 
+export const updateCatalog = createAsyncThunk(
+  'catalog/update-item',
+  async ({ id, formData }: { id: string; formData: FormData }, { rejectWithValue }) => {
+    try {
+      const response = await axios.put(`/catalog/update/${id}`, formData);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || 'An error occurred'
+      );
+    }
+  }
+)
 
 const catalogSlice = createSlice({
   name: 'catalog',
