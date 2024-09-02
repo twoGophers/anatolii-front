@@ -11,7 +11,8 @@ const initialState = {
   catalogAll: null,
   subloading: false,
   suberror: '',
-  subCatalogAll: null
+  subCatalogAll: null,
+  cardArr: null
 };
 
 export const sendCardData = createAsyncThunk(
@@ -42,7 +43,7 @@ export const catalogMain = createAsyncThunk(
   }
 );
 
-export const catalogItems = createAsyncThunk(
+export const getCatalogItems = createAsyncThunk(
   'catalog',
   async (_, { rejectWithValue }) => {
     try {
@@ -54,7 +55,7 @@ export const catalogItems = createAsyncThunk(
   }
 );
 
-export const catalogSubCategory = createAsyncThunk(
+export const sendSubCategory = createAsyncThunk(
   'catalog/sub-create',
   async (formData: FormData, { rejectWithValue }) => {
     try {
@@ -70,7 +71,7 @@ export const catalogSubCategory = createAsyncThunk(
   }
 );
 
-export const catalogSubItems = createAsyncThunk(
+export const getSubItems = createAsyncThunk(
   'catalog/sub-items',
   async (_, { rejectWithValue }) => {
     try {
@@ -108,7 +109,20 @@ export const updateCatalog = createAsyncThunk(
       );
     }
   }
+);
+
+export const getCardAll = createAsyncThunk(
+  'catalog/card-all',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get('/catalog/card-all');
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || 'An error occurred');
+    }
+  }
 )
+
 
 const catalogSlice = createSlice({
   name: 'catalog',
@@ -125,27 +139,36 @@ const catalogSlice = createSlice({
       .addCase(catalogMain.rejected, (state) => {
         state.catalog = null;
       })
-      .addCase(catalogItems.pending, (state) => {
+      .addCase(getCatalogItems.pending, (state) => {
         state.subloading = true;
         state.suberror = '';
       })
-      .addCase(catalogItems.fulfilled, (state, action) => {
+      .addCase(getCatalogItems.fulfilled, (state, action) => {
         state.subloading = false;
         state.catalogAll = action.payload;
         state.suberror = '';
       })
-      .addCase(catalogItems.rejected, (state, action) => {
+      .addCase(getCatalogItems.rejected, (state, action) => {
         state.subloading = false;
         state.suberror = action.payload as string;
       })
-      .addCase(catalogSubItems.pending, (state) => {
+      .addCase(getSubItems.pending, (state) => {
         state.subCatalogAll = null;
       })
-      .addCase(catalogSubItems.fulfilled, (state, action) => {
+      .addCase(getSubItems.fulfilled, (state, action) => {
         state.subCatalogAll = action.payload;
       })
-      .addCase(catalogSubItems.rejected, (state) => {
+      .addCase(getSubItems.rejected, (state) => {
         state.subCatalogAll = null;
+      })
+      .addCase(getCardAll.pending, (state) => {
+        state.cardArr = null;
+      })
+      .addCase(getCardAll.fulfilled, (state, action) => {
+        state.cardArr = action.payload;
+      })
+      .addCase(getCardAll.rejected, (state) => {
+        state.cardArr = null;
       });
   },
 });
