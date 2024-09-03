@@ -87,7 +87,7 @@ export const deleteItem = createAsyncThunk(
   'catalog/delete-item',
   async ({ id, name }: { id: string; name: string }, { rejectWithValue }) => {
     try {
-      const response = await axios.delete(`/catalog/delete/${id}?name=${name}`);
+      const response = await axios.delete(`/catalog/delete-sub/${id}?name=${name}`);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(
@@ -101,7 +101,7 @@ export const updateCatalog = createAsyncThunk(
   'catalog/update-item',
   async ({ id, formData }: { id: string; formData: FormData }, { rejectWithValue }) => {
     try {
-      const response = await axios.put(`/catalog/update/${id}`, formData);
+      const response = await axios.put(`/catalog/update-catalog/${id}`, formData);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(
@@ -123,6 +123,31 @@ export const getCardAll = createAsyncThunk(
   }
 )
 
+export const deleteCard = createAsyncThunk(
+  'catalog/deleteCard',
+  async ({ id }: { id: string }, { rejectWithValue }) => { // Note the use of an object with id
+    try {
+      const response = await axios.delete(`/catalog/delete-card/${id}`);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || 'An error occurred'
+      );
+    }
+  }
+);
+
+export const putUpdateCard = createAsyncThunk(
+  'products/updateCard',
+  async ({ id, formData }, { rejectWithValue }) => {
+    try {
+      const response = await axios.put(`/catalog/update-card/${id}`, formData);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
 
 const catalogSlice = createSlice({
   name: 'catalog',

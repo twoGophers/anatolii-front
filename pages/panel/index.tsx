@@ -1,7 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { loginAdmin, verifyAdmin } from '@/store/slices/admin';
-import { catalogMain, getCatalogItems, sendSubCategory, getSubItems, sendCardData, deleteItem, updateCatalog, getCardAll } from '@/store/slices/catalog';
+import { catalogMain, getCatalogItems, sendSubCategory, getSubItems, sendCardData, deleteItem, updateCatalog, getCardAll, deleteCard, putUpdateCard } from '@/store/slices/catalog';
+import Image from 'next/image';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronDown, faClose } from "@fortawesome/free-solid-svg-icons";
 
 export default function Panel() {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -40,7 +43,6 @@ export default function Panel() {
 
   url: '',
   image: [],          // Initialize as an array, not null
-  items: [],          // Initialize as an array
   subCatalog: '',
   subCatalogMD: '',
   urlSubCatalog: '',
@@ -48,11 +50,12 @@ export default function Panel() {
   name: '',
   nameMD: '',
   
-  
-  imageName: [],      // Initialize as an array, not null
   description: '',
   descriptionRO: '',
-  price: ''
+  price: '',
+
+  _id: '',
+  imageUpdate: []
   });
 
   const [selectedImages, setSelectedImages] = useState<(string | ArrayBuffer)[]>([]);
@@ -213,7 +216,6 @@ const resetData = (type: 'catalog' | 'subCatalog' | 'card-item') => {
       
         url: '',
         image: [],          // Initialize as an array, not null
-        items: [],          // Initialize as an array
         subCatalog: '',
         subCatalogMD: '',
         urlSubCatalog: '',
@@ -222,7 +224,6 @@ const resetData = (type: 'catalog' | 'subCatalog' | 'card-item') => {
         nameMD: '',
         
         
-        imageName: [],      // Initialize as an array, not null
         description: '',
         descriptionRO: '',
         price: ''
@@ -261,14 +262,11 @@ const sendCard = async (e: React.MouseEvent<HTMLButtonElement>) => {
   card.image.forEach((file, index) => {
     formData.append(`images`, file); // Append each file
   });
-
-  console.log(card);
   try {
     const data = dispatch(sendCardData(formData));
     resetData('card-item');
   } catch (error) {
     console.log(error);
-    
   }
 };
 
@@ -315,10 +313,9 @@ const deleteCatalog = (item: any, name: string) => {
   if(name === 'catalog') {
     id = item._id;
   } else if( name === 'sub') {
-    id = item.url;
-  } else if( name === 'card') {
-    id = item._id;
-  };
+    id = name === 'sub' ? item.url : item._id;
+  } 
+
   if (id) {
     console.log(id);
     dispatch(deleteItem({ id, name }));
@@ -330,6 +327,84 @@ const deleteCatalog = (item: any, name: string) => {
 const toggleBlock = (block: string) => {
   setOpenBlock((prev) => (prev === block ? null : block));
 };
+
+const handleDeleteCard = (item: any) => {
+  dispatch(deleteCard({ id: item._id }));
+};
+
+const updateCard = () => {
+  const formData = new FormData();
+  Object.keys(card).forEach((key) => {
+    if (key === 'imageUpdate') {
+      card.imageUpdate.forEach((file) => {
+        formData.append('images', file, file.name);
+      });
+    } else if (key === 'image') {
+      card.image.forEach((file) => {
+        // Optionally, include existing images' URLs if needed
+      });
+    } else {
+      formData.append(key, card[key]);
+    }
+  });
+
+  dispatch(putUpdateCard({ id: card._id, formData })).then((response) => {
+    if (response.meta.requestStatus === 'fulfilled') {
+      setRedactCard(null);
+      setCard(prevCard => ({ ...prevCard, imageUpdate: [] })); // Clear new images
+      resetCard();
+    }
+  });
+};
+
+const handleFileUpdateCard = (e) => {
+  const files = Array.from(e.target.files);
+  setCard(prevCard => ({
+    ...prevCard,
+    imageUpdate: [...files]
+  }));
+};
+
+const resetCard = () => {
+  setCard(prevCard => ({
+    ...prevCard,
+    imageUpdate: []
+  }));
+};
+
+const handleDeleteImageCard = (index) => {
+  const updatedImages = card.image.filter((_, i) => i !== index);
+  setCard(prevCard => ({
+    ...prevCard,
+    image: updatedImages
+  }));
+};
+
+useEffect(() => {
+  if (redactCard) {
+    setCard(prevCard => ({
+      ...prevCard,                    // Preserve the existing properties
+      catalog: redactCard.catalog || '',
+      catalogMD: redactCard.catalogMD || '',
+      urlCatalog: redactCard.urlCatalog || '',
+      url: redactCard.url || '',
+      image: redactCard.images || [], // Ensure this matches the state
+      subCatalog: redactCard.subCatalog || '',
+      subCatalogMD: redactCard.subCatalogMD || '',
+      urlSubCatalog: redactCard.urlSubCatalog || '',
+      name: redactCard.name || '',
+      nameMD: redactCard.nameMD || '',
+      description: redactCard.description || '',
+      descriptionRO: redactCard.descriptionRO || '',
+      price: redactCard.price || '',
+      _id: redactCard._id || ''
+    }));
+  }
+}, [redactCard]);
+
+console.log(redactCard);
+console.log(card);
+
 
   return (
     <div className='container'>
@@ -609,7 +684,7 @@ const toggleBlock = (block: string) => {
                       className='border p-2 bg-gray-200 hover:bg-green-500'
                       onClick={sendCard}
                     >
-                      Сохранить подкатегорию
+                      Сохранить карточку
                     </button>
                     <button
                       type="button"
@@ -819,7 +894,7 @@ const toggleBlock = (block: string) => {
                             <div>{item?.name}</div>
                             <div>
                               <button
-                                onClick={() => deleteCatalog(item, 'sub')}
+                                onClick={() => handleDeleteCard(item)}
                                 className='border p-2 bg-red-200 hover:bg-green-500'
                               >
                                 Удалить
@@ -837,101 +912,130 @@ const toggleBlock = (block: string) => {
                               <div className='relative'>
                                 <span className='absolute right-0 top-0 p-1 bg-red-400 w-8 h-8 cursor-pointer flex justify-center items-center rounded-md' onClick={() => setRedactCard(null)}>X</span>
                                 <form className='border p-4 mt-2 flex flex-col flex-wrap justify-around items-start'>
+                                  <div className='flex flex-row gap-2 mb-2'>
+                                    {
+                                      card?.image?.map((item: any, index: any) => (
+                                        <div key={item} className='relative'>
+                                          <p>{item.image}</p>
+                                          <img
+                                            src={`http://localhost:3001/${item}`}
+                                            alt={`Selected ${index}`}
+                                            className="w-full h-20 object-cover"
+                                          />
+                                          <span className='absolute top-0 right-0 bg-white w-5 h-5 flex justify-center items-center cursor-pointer rounded-md'>
+                                            <FontAwesomeIcon
+                                              icon={faClose}
+                                              className={`w-3 rotate-icon`}
+                                              onClick={() => handleDeleteImageCard(index)}
+                                            />
+                                          </span>
+                                        </div>
+                                      ))
+                                    }
+                                  </div>
                                     
-                                  <InputOne 
-                                    title='Название товара - русс'
-                                    name={null}
-                                    value={card.name}
-                                    placeholder='Стол Барбара'
-                                    onChange={(e: any) => setCard({ ...card, name: e.target.value })}
-                                  />
-                                  <InputOne 
-                                    title='Название товара - молд'
-                                    name={null}
-                                    value={card.nameMD}
-                                    placeholder='Biroul Barbarei'
-                                    onChange={(e: any) => setCard({ ...card, nameMD: e.target.value })}
-                                  />
-                                <div className='w-full'>
-                                  <p>Описание карточки товара - русс</p>
-                                  <textarea 
-                                    value={card.description} 
-                                    onChange={(e) => setCard({ ...card, description: e.target.value })}
-                                    className='w-full border mb-3 p-1'
-                                    ></textarea>
-                                </div>
-                                <div className='w-full'>
-                                  <p>Описание карточки товара - молд</p>
-                                  <textarea 
-                                    value={card.descriptionRO} 
-                                    onChange={(e) => setCard({ ...card, descriptionRO: e.target.value })}
-                                    className='w-full border mb-3 p-1'
-                                    ></textarea>
-                                </div>
-                                <InputOne 
-                                  title='Уникальное имя'
-                                  name={null}
-                                  value={card.url}
-                                  placeholder='Пример: ratan-terasa'
-                                  onChange={(e: any) => setCard({ ...card, url: e.target.value })}
-                                />
-                                
-                                <div>
-                                  <div className='w-full mb-4'>
-                                    <input
-                                      placeholder='Цена'
-                                      type="number"
-                                      className='border p-1 w-full'
-                                      value={card.price}
-                                      onChange={(e) => setCard({ ...card, price: e.target.value })}
+                                    <InputOne 
+                                      title='Название товара - русс'
+                                      name={redactCard.name}
+                                      value={card.name}
+                                      placeholder='Стол Барбара'
+                                      onChange={(e: any) => setCard({ ...card, name: e.target.value })}
                                     />
+                                    <InputOne 
+                                      title='Название товара - молд'
+                                      name={redactCard.nameMD}
+                                      value={card.nameMD}
+                                      placeholder='Biroul Barbarei'
+                                      onChange={(e: any) => setCard({ ...card, nameMD: e.target.value })}
+                                    />
+                                  <div className='w-full'>
+                                    <p>Описание карточки товара - русс</p>
+                                    <p className='text-lime-500'>{redactCard.description}</p>
+                                    <textarea 
+                                      value={card.description} 
+                                      onChange={(e) => setCard({ ...card, description: e.target.value })}
+                                      className='w-full border mb-3 p-1'
+                                      ></textarea>
                                   </div>
-                                </div>
-                                <div className="w-full mb-4">
-                                  <p>Выбери картинки</p>
-                                  <input
-                                    className='card-item'
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={handleFileChangeCard}
-                                    multiple
+                                  <div className='w-full'>
+                                    <p>Описание карточки товара - молд</p>
+                                    <p className='text-lime-500'>{redactCard.descriptionRO}</p>
+                                    <textarea 
+                                      value={card.descriptionRO} 
+                                      onChange={(e) => setCard({ ...card, descriptionRO: e.target.value })}
+                                      className='w-full border mb-3 p-1'
+                                      ></textarea>
+                                  </div>
+                                  <InputOne 
+                                    title='Уникальное имя'
+                                    name={redactCard.url}
+                                    value={card.url}
+                                    placeholder='Пример: ratan-terasa'
+                                    onChange={(e: any) => setCard({ ...card, url: e.target.value })}
                                   />
-                                  <div className="mt-4 flex flex-row flex-wrap gap-1">
-                                    {selectedImages.map((image, index) => (
-                                      <div key={index} className="relative  w-24 h-24">
-                                        <img
-                                          src={image as string}
-                                          alt={`Selected ${index}`}
-                                          className="w-full"
-                                        />
-                                        <button
-                                          onClick={() => handleDeleteImage(index)}
-                                          className="absolute inset-0 bg-black bg-opacity-50 text-white flex items-center justify-center"
-                                        >
-                                          Удалить
-                                        </button>
-                                      </div>
-                                    ))}
+                                  
+                                  <div>
+                                    <div className='w-full mb-4'>
+                                    <p className='text-lime-500'>{redactCard.price}</p>
+                                      <input
+                                        placeholder='Цена'
+                                        type="number"
+                                        className='border p-1 w-full'
+                                        value={card.price}
+                                        onChange={(e) => setCard({ ...card, price: e.target.value })}
+                                      />
+                                    </div>
                                   </div>
-                                </div>
-                                <div className='w-full mb-4'>
-                                  <button
-                                    type="button"
-                                    className='border p-2 bg-gray-200 hover:bg-green-500'
-                                    onClick={sendCard}
-                                  >
-                                    Сохранить подкатегорию
-                                  </button>
-                                  <button
-                                    type="button"
-                                    onClick={() => resetData('card-item')}
-                                    className='border p-2 ml-5 bg-red-200 hover:bg-green-500'
-                                  >
-                                    Сбросить
-                                  </button>
-                                  <p className='text-sm text-gray-400'>Все поля должны быть заполнены</p>
-                                </div>
-                              </form>
+                                  <div className="w-full mb-4">
+                                    <p>Выбери картинки</p>
+                                    {
+                                      card.image.map((item: string) => (
+                                        <p key={item}>{item}</p>
+                                      ))
+                                    }
+                                    <input
+                                      className='card-item'
+                                      type="file"
+                                      accept="image/*"
+                                      onChange={(e) => handleFileUpdateCard(e)}
+                                      multiple
+                                    />
+                                    <div className="mt-4 flex flex-row flex-wrap gap-1">
+                                      {selectedImages.map((image, index) => (
+                                        <div key={index} className="relative  w-24 h-24">
+                                          <img
+                                            src={image as string}
+                                            alt={`Selected ${index}`}
+                                            className="w-full"
+                                          />
+                                          <button
+                                            onClick={() => handleDeleteImage(index)}
+                                            className="absolute inset-0 bg-black bg-opacity-50 text-white flex items-center justify-center"
+                                          >
+                                            Удалить
+                                          </button>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                  <div className='w-full mb-4'>
+                                    <button
+                                      type="button"
+                                      className='border p-2 bg-gray-200 hover:bg-green-500'
+                                      onClick={updateCard}
+                                    >
+                                      Сохранить карточку
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => resetData('card-item')}
+                                      className='border p-2 ml-5 bg-red-200 hover:bg-green-500'
+                                    >
+                                      Сбросить
+                                    </button>
+                                    <p className='text-sm text-gray-400'>Все поля должны быть заполнены</p>
+                                  </div>
+                                </form>
                               </div>
                           }
                         </div>
