@@ -12,5 +12,5 @@ export interface Card {
     description: string;
     descriptionRO: string;
     price: string;
-    imageUpdate: any
+    imageUpdate: File[];
   }

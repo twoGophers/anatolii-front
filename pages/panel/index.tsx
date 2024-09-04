@@ -1,10 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
+import dynamic from 'next/dynamic';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { loginAdmin, verifyAdmin } from '@/store/slices/admin';
 import { catalogMain, getCatalogItems, sendSubCategory, getSubItems, sendCardData, deleteItem, updateCatalog, getCardAll, deleteCard, putUpdateCard } from '@/store/slices/catalog';
-import Image from 'next/image';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faClose } from "@fortawesome/free-solid-svg-icons";
+import { EditorState, convertFromHTML, convertToRaw, ContentState   } from 'draft-js';
+const Editor = dynamic(() => import('react-draft-wysiwyg').then(mod => mod.Editor), {
+  ssr: false
+});
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import draftToHtml from 'draftjs-to-html';
 
 export default function Panel() {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -13,6 +19,19 @@ export default function Panel() {
   const [token, setToken] = useState<string | undefined>();
   const { loading, error, isAuthenticated, verify } = useAppSelector((state: any) => state.admin);
   const { catalogAll, subCatalogAll, cardArr } = useAppSelector((state: any) => state.catalog);
+
+
+  const [selectedImages, setSelectedImages] = useState<(string | ArrayBuffer)[]>([]);
+  const [ subCatalogArr, setSubCatalogArr] = useState([]);
+
+  // редактирование
+  const [ redactCatalog , setRedactCatalog ] = useState<any>([]);
+  const [ redactSubCatalog , setRedactSubCatalog ] = useState<any>([]);
+  const [ redactCard , setRedactCard ] = useState<any>([]);
+  const [openBlock, setOpenBlock] = useState<string | null>(null);
+  const [ message, setMessage ] = useState<string>('');
+  const [editorState, setEditorState] = useState(EditorState.createEmpty());
+  const [editorStateRO, setEditorStateRO] = useState(EditorState.createEmpty());
 
   // catalog send
   const [catalogData, setCatalogData] = useState({
@@ -57,15 +76,6 @@ export default function Panel() {
   _id: '',
   imageUpdate: []
   });
-
-  const [selectedImages, setSelectedImages] = useState<(string | ArrayBuffer)[]>([]);
-  const [ subCatalogArr, setSubCatalogArr] = useState([]);
-
-  // редактирование
-  const [ redactCatalog , setRedactCatalog ] = useState<any>([]);
-  const [ redactSubCatalog , setRedactSubCatalog ] = useState<any>([]);
-  const [ redactCard , setRedactCard ] = useState<any>([]);
-  const [openBlock, setOpenBlock] = useState<string | null>(null);
 
   const signIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -132,17 +142,19 @@ export default function Panel() {
     }
 
     try {
-      let data;
+      let response;
       if (isUpdate) {
         if (!id) {
           throw new Error('ID is required for updating catalog');
         }
-        data = await dispatch(updateCatalog({ id, formData })).unwrap();
+        response = await dispatch(updateCatalog({ id, formData })).unwrap();
       } else if ( valid ) {
-        data = await dispatch(catalogMain(formData)).unwrap();
+        response = await dispatch(catalogMain(formData)).unwrap();
+        const { success, message, data } = response.payload;
+        setMessage(message);
       }
   
-      console.log('Catalog data:', data);
+      console.log('Catalog data:', response);
     } catch (error) {
       console.error(`Failed to ${isUpdate ? 'update' : 'create'} catalog:`, error);
     }
@@ -157,7 +169,6 @@ export default function Panel() {
     } else if ( item === 'cards') {
       await dispatch(getCardAll())
     }
-    
   };
 
 // отправка суб категории
@@ -176,11 +187,14 @@ const sendSubCatalog = async (e: React.MouseEvent<HTMLButtonElement>) => {
 
   if (subCatalogData.image) {
     formData.append('image', subCatalogData.image, subCatalogData.imageName);
-  }
+  }  
 
   try {
-    const data = await dispatch(sendSubCategory(formData)).unwrap();
-    if(data) {
+    const response = await dispatch(sendSubCategory(formData)).unwrap();
+    const { success, message, data } = response.payload;
+    setMessage(message);
+
+    if(response) {
       resetData('subCatalog')
     }
   } catch (error) {
@@ -226,7 +240,10 @@ const resetData = (type: 'catalog' | 'subCatalog' | 'card-item') => {
         
         description: '',
         descriptionRO: '',
-        price: ''
+        price: '',
+
+        _id: '',
+        imageUpdate: []
       })
     }
 
@@ -241,8 +258,24 @@ const handleDeleteImage = (index: number) => {
   setSelectedImages(prevImages => prevImages.filter((_, i) => i !== index));
 };
 
+const validateCard = () => {
+  const values = Object.values(card);
+  const isValid = values.every(value => {
+    if (Array.isArray(value)) {
+      return value.length > 0;
+    }
+    return value !== '' && value !== null && value !== undefined;
+  });
+  return isValid;
+};
+
+
 const sendCard = async (e: React.MouseEvent<HTMLButtonElement>) => {
   e.preventDefault();
+
+  if (!validateCard()) {
+    return;
+  }
 
   const formData = new FormData();
   
@@ -262,8 +295,12 @@ const sendCard = async (e: React.MouseEvent<HTMLButtonElement>) => {
   card.image.forEach((file, index) => {
     formData.append(`images`, file); // Append each file
   });
+
+
   try {
-    const data = dispatch(sendCardData(formData));
+    const response = await dispatch(sendCardData(formData));
+    const { success, message, data } = response.payload;
+    setMessage(message);
     resetData('card-item');
   } catch (error) {
     console.log(error);
@@ -332,19 +369,19 @@ const handleDeleteCard = (item: any) => {
   dispatch(deleteCard({ id: item._id }));
 };
 
-const updateCard = () => {
+const updateCard = (e: any) => {
   const formData = new FormData();
-  Object.keys(card).forEach((key) => {
+  
+  Object.entries(card).forEach(([key, value]) => {
     if (key === 'imageUpdate') {
-      card.imageUpdate.forEach((file) => {
+      (value as File[]).forEach((file) => {
         formData.append('images', file, file.name);
       });
     } else if (key === 'image') {
-      card.image.forEach((file) => {
-        // Optionally, include existing images' URLs if needed
+      (value as string[]).forEach((file) => {
       });
     } else {
-      formData.append(key, card[key]);
+      formData.append(key, value as string | Blob);
     }
   });
 
@@ -353,13 +390,14 @@ const updateCard = () => {
       setRedactCard(null);
       setCard(prevCard => ({ ...prevCard, imageUpdate: [] })); // Clear new images
       resetCard();
+      uploadData(e, 'cards'); 
     }
   });
 };
 
-const handleFileUpdateCard = (e) => {
+const handleFileUpdateCard = (e: any) => {
   const files = Array.from(e.target.files);
-  setCard(prevCard => ({
+  setCard((prevCard: any) => ({
     ...prevCard,
     imageUpdate: [...files]
   }));
@@ -372,7 +410,7 @@ const resetCard = () => {
   }));
 };
 
-const handleDeleteImageCard = (index) => {
+const handleDeleteImageCard = (index: any) => {
   const updatedImages = card.image.filter((_, i) => i !== index);
   setCard(prevCard => ({
     ...prevCard,
@@ -383,12 +421,12 @@ const handleDeleteImageCard = (index) => {
 useEffect(() => {
   if (redactCard) {
     setCard(prevCard => ({
-      ...prevCard,                    // Preserve the existing properties
+      ...prevCard,
       catalog: redactCard.catalog || '',
       catalogMD: redactCard.catalogMD || '',
       urlCatalog: redactCard.urlCatalog || '',
       url: redactCard.url || '',
-      image: redactCard.images || [], // Ensure this matches the state
+      image: redactCard.images || [],
       subCatalog: redactCard.subCatalog || '',
       subCatalogMD: redactCard.subCatalogMD || '',
       urlSubCatalog: redactCard.urlSubCatalog || '',
@@ -402,8 +440,39 @@ useEffect(() => {
   }
 }, [redactCard]);
 
-console.log(redactCard);
-console.log(card);
+// редактирование текста
+const handleEditorStateChange = (editorType: any) => (newState: any) => {
+  const contentState = newState.getCurrentContent();
+  const rawContentState = convertToRaw(contentState);
+  const content = draftToHtml(rawContentState);
+
+  setCard((prevCard) => ({
+    ...prevCard,
+    [editorType]: content
+  }));
+
+  if (editorType === 'description') {
+    setEditorState(newState);
+  } else if (editorType === 'descriptionRO') {
+    setEditorStateRO(newState);
+  }
+};
+
+useEffect(() => {
+  if (redactCard) {
+    if (redactCard.description) {
+      const blocksFromHTML = convertFromHTML(redactCard.description);
+      const contentState = ContentState.createFromBlockArray(blocksFromHTML.contentBlocks, blocksFromHTML.entityMap);
+      setEditorState(EditorState.createWithContent(contentState));
+    }
+
+    if (redactCard.descriptionRO) {
+      const blocksFromHTMLRO = convertFromHTML(redactCard.descriptionRO);
+      const contentStateRO = ContentState.createFromBlockArray(blocksFromHTMLRO.contentBlocks, blocksFromHTMLRO.entityMap);
+      setEditorStateRO(EditorState.createWithContent(contentStateRO));
+    }
+  }
+}, [redactCard]);
 
 
   return (
@@ -417,12 +486,13 @@ console.log(card);
           </button>
           {error && <p className='text-red-500'>{error}</p>}
         </form>
+        {/* <div dangerouslySetInnerHTML={{ __html: card.description }} /> */}
       </div>
       {
         isAuthenticated && verify && (
           <div className=' mt-6 flex flex-col flex-wrap'>
             <div className='border mt-2'>
-              <h2 className='font-semibold text-xl p-3 cursor-pointer' onClick={() => toggleBlock('catalog')}>Новая категория</h2>
+              <h2 className='font-semibold text-xl p-3 cursor-pointer hover:bg-green-100' onClick={() => toggleBlock('catalog')}>Новая категория</h2>
               {
                 openBlock === 'catalog' &&
                 <form className='border p-4 mt-2 flex flex-col flex-wrap justify-around items-start'>
@@ -485,13 +555,16 @@ console.log(card);
                     Сбросить
                   </button>
                   <p className='text-sm text-gray-400'>Все поля должны быть заполнены</p>
+                  {
+                    message && <p className='text-red-400 border w-fit p-2 bg-gray-300 mt-2 text-lg font-semibold'>{ message }</p>
+                  }
                 </div>
                 </form>
               }
               
             </div>
             <div className='border mt-2'>
-              <h2 className='font-semibold text-xl p-3 cursor-pointer' onClick={() => toggleBlock('sub')}>Под категория</h2>
+              <h2 className='font-semibold text-xl p-3 cursor-pointer hover:bg-green-100' onClick={() => toggleBlock('sub')}>Под категория</h2>
               {
                 openBlock === 'sub' &&
                 <form className='border p-4 mt-2 flex flex-col flex-wrap justify-around items-start'>
@@ -553,18 +626,23 @@ console.log(card);
                     Сбросить
                   </button>
                   <p className='text-sm text-gray-400'>Все поля должны быть заполнены</p>
+
+                  {
+                    message && <p className='text-red-400 border w-fit p-2 bg-gray-300 mt-2 text-lg font-semibold'>{ message }</p>
+                  }
+
                 </div>
                 </form>
               }
               
             </div>
             <div className='border mt-2'>
-              <h2 className='font-semibold text-xl p-3  cursor-pointer' onClick={() => toggleBlock('card')}>Карточка товара</h2>
+              <h2 className='font-semibold text-xl p-3  cursor-pointer hover:bg-green-100' onClick={(e) => {toggleBlock('card'); uploadData(e, 'catalog')}}>Карточка товара</h2>
               <p className='pl-3'>Все поля обязательны</p>
               {
                 openBlock === 'card' &&
                 <form className='border p-4 mt-2 flex flex-col flex-wrap justify-around items-start'>
-                    <button className='mb-3 bg-gray-200 p-2 hover:bg-green-400' onClick={(e) => uploadData(e, 'catalog')}>Обновить категорию</button>
+                    {/* <button className='mb-3 bg-gray-200 p-2 hover:bg-green-400' onClick={(e) => uploadData(e, 'catalog')}>Обновить категорию</button> */}
                     <p>Название каталога</p>
                     <div className='border  p-1 w-full flex flex-wrap'>
                       
@@ -616,21 +694,28 @@ console.log(card);
                       placeholder='Biroul Barbarei'
                       onChange={(e: any) => setCard({ ...card, nameMD: e.target.value })}
                     />
-                  <div className='w-full'>
+                  <div className='w-full mb-4'>
                     <p>Описание карточки товара - русс</p>
-                    <textarea 
-                      value={card.description} 
-                      onChange={(e) => setCard({ ...card, description: e.target.value })}
-                      className='w-full border mb-3 p-1'
-                      ></textarea>
+                    <div className='border bg-green-100'>
+                     <Editor
+                      editorState={editorState}
+                      onEditorStateChange={handleEditorStateChange('description')}
+                      wrapperClassName='demo-wrapper'
+                      editorClassName='demo-editor'
+                    /> 
+                    </div>
+                    
                   </div>
-                  <div className='w-full'>
+                  <div className='w-full  mb-4'>
                     <p>Описание карточки товара - молд</p>
-                    <textarea 
-                      value={card.descriptionRO} 
-                      onChange={(e) => setCard({ ...card, descriptionRO: e.target.value })}
-                      className='w-full border mb-3 p-1'
-                      ></textarea>
+                    <div className='border bg-green-100'>
+                    <Editor
+                      editorState={editorStateRO}
+                      onEditorStateChange={handleEditorStateChange('descriptionRO')}
+                      wrapperClassName='demo-wrapper'
+                      editorClassName='demo-editor'
+                    />
+                    </div>
                   </div>
                   <InputOne 
                     title='Уникальное имя'
@@ -694,21 +779,27 @@ console.log(card);
                       Сбросить
                     </button>
                     <p className='text-sm text-gray-400'>Все поля должны быть заполнены</p>
+                    {
+                      message && <p className='text-red-400 border w-fit p-2 bg-gray-300 mt-2 text-lg font-semibold'>{ message }</p>
+                    }
                   </div>
                 </form>
               }
             </div>
-            <div className='border mt-2'>
-              <h2 className='font-semibold text-xl p-3  cursor-pointer' onClick={() => toggleBlock('change')}>Изменение данных</h2>
+            <div className='border mt-2 relative'>
+              <h2 className='font-semibold text-xl p-3  cursor-pointer hover:bg-green-100' onClick={() => toggleBlock('change')}>Изменение данных</h2>
+              <button onClick={(e) => { 
+                uploadData(e, 'catalog'); 
+                uploadData(e, 'cards'); 
+                uploadData(e, 'sub-catalog'); 
+                }} className='bg-green-300 text-base p-2 sticky top-4 left-4 w-full '>
+                  Обновить
+              </button>
               {
                 openBlock === 'change' &&
                 <>
                   <div className='p-6'>
-                    <button onClick={(e) => { 
-                      uploadData(e, 'catalog'); 
-                      uploadData(e, 'cards'); 
-                      uploadData(e, 'sub-catalog'); 
-                      }} className='bg-gray-300 text-base p-2'>Обновить</button>
+                    
                     <h2 className='font-semibold text-xl mb-2'>Каталог</h2>
                     {
                       catalogAll && catalogAll.map((item: any, index: number) => (
@@ -948,23 +1039,27 @@ console.log(card);
                                       placeholder='Biroul Barbarei'
                                       onChange={(e: any) => setCard({ ...card, nameMD: e.target.value })}
                                     />
-                                  <div className='w-full'>
+                                  <div className='w-full mb-4'>
                                     <p>Описание карточки товара - русс</p>
-                                    <p className='text-lime-500'>{redactCard.description}</p>
-                                    <textarea 
-                                      value={card.description} 
-                                      onChange={(e) => setCard({ ...card, description: e.target.value })}
-                                      className='w-full border mb-3 p-1'
-                                      ></textarea>
+                                    <div className='border bg-green-100'>
+                                    <Editor
+                                      editorState={editorState}
+                                      onEditorStateChange={handleEditorStateChange('description')}
+                                      wrapperClassName='demo-wrapper'
+                                      editorClassName='demo-editor'
+                                    />
+                                    </div>
                                   </div>
-                                  <div className='w-full'>
+                                  <div className='w-full mb-4'>
                                     <p>Описание карточки товара - молд</p>
-                                    <p className='text-lime-500'>{redactCard.descriptionRO}</p>
-                                    <textarea 
-                                      value={card.descriptionRO} 
-                                      onChange={(e) => setCard({ ...card, descriptionRO: e.target.value })}
-                                      className='w-full border mb-3 p-1'
-                                      ></textarea>
+                                    <div className='border bg-green-100'>
+                                    <Editor
+                                      editorState={editorStateRO}
+                                      onEditorStateChange={handleEditorStateChange('descriptionRO')}
+                                      wrapperClassName='demo-wrapper'
+                                      editorClassName='demo-editor'
+                                    />
+                                    </div>
                                   </div>
                                   <InputOne 
                                     title='Уникальное имя'
@@ -1022,7 +1117,7 @@ console.log(card);
                                     <button
                                       type="button"
                                       className='border p-2 bg-gray-200 hover:bg-green-500'
-                                      onClick={updateCard}
+                                      onClick={(e) => updateCard(e)}
                                     >
                                       Сохранить карточку
                                     </button>
@@ -1034,6 +1129,7 @@ console.log(card);
                                       Сбросить
                                     </button>
                                     <p className='text-sm text-gray-400'>Все поля должны быть заполнены</p>
+                                    
                                   </div>
                                 </form>
                               </div>

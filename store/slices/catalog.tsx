@@ -125,7 +125,7 @@ export const getCardAll = createAsyncThunk(
 
 export const deleteCard = createAsyncThunk(
   'catalog/deleteCard',
-  async ({ id }: { id: string }, { rejectWithValue }) => { // Note the use of an object with id
+  async ({ id }: { id: string }, { rejectWithValue }) => {
     try {
       const response = await axios.delete(`/catalog/delete-card/${id}`);
       return response.data;
@@ -139,12 +139,12 @@ export const deleteCard = createAsyncThunk(
 
 export const putUpdateCard = createAsyncThunk(
   'products/updateCard',
-  async ({ id, formData }, { rejectWithValue }) => {
+  async ({ id, formData }: any) => {
     try {
       const response = await axios.put(`/catalog/update-card/${id}`, formData);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error?.response?.data);
+      console.log(error);
     }
   }
 );
