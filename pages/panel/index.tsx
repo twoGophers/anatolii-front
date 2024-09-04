@@ -150,6 +150,10 @@ export default function Panel() {
         response = await dispatch(updateCatalog({ id, formData })).unwrap();
       } else if ( valid ) {
         response = await dispatch(catalogMain(formData)).unwrap();
+        if(response) {
+          resetData('catalog');
+          toggleBlock('catalog')
+        }
         const { success, message, data } = response.payload;
         setMessage(message);
       }
@@ -191,11 +195,12 @@ const sendSubCatalog = async (e: React.MouseEvent<HTMLButtonElement>) => {
 
   try {
     const response = await dispatch(sendSubCategory(formData)).unwrap();
-    const { success, message, data } = response.payload;
-    setMessage(message);
+    console.log('Response:', response);
+
+    // setMessage('Sub: ' + message);
 
     if(response) {
-      resetData('subCatalog')
+      resetData('subCatalog');
     }
   } catch (error) {
     console.error('Error saving subcategory:', error);
@@ -229,7 +234,7 @@ const resetData = (type: 'catalog' | 'subCatalog' | 'card-item') => {
         urlCatalog: '',
       
         url: '',
-        image: [],          // Initialize as an array, not null
+        image: [],
         subCatalog: '',
         subCatalogMD: '',
         urlSubCatalog: '',
@@ -258,23 +263,26 @@ const handleDeleteImage = (index: number) => {
   setSelectedImages(prevImages => prevImages.filter((_, i) => i !== index));
 };
 
-const validateCard = () => {
-  const values = Object.values(card);
-  const isValid = values.every(value => {
-    if (Array.isArray(value)) {
-      return value.length > 0;
-    }
-    return value !== '' && value !== null && value !== undefined;
-  });
-  return isValid;
-};
-
 
 const sendCard = async (e: React.MouseEvent<HTMLButtonElement>) => {
   e.preventDefault();
 
-  if (!validateCard()) {
-    return;
+  if(
+    card.catalog.length < 0 || 
+    card.catalogMD.length < 0 ||
+    card.urlCatalog.length < 0 ||
+    card.url.length < 0 ||
+    card.subCatalog.length < 0 ||
+    card.subCatalogMD.length < 0 ||
+    card.urlSubCatalog.length < 0 ||
+    card.name.length < 0 || 
+    card.nameMD.length < 0 || 
+    card.description.length < 0 || 
+    card.descriptionRO.length < 0 ||
+    !card.price ||
+    !card.image
+  ) {
+    return null
   }
 
   const formData = new FormData();
@@ -295,7 +303,6 @@ const sendCard = async (e: React.MouseEvent<HTMLButtonElement>) => {
   card.image.forEach((file, index) => {
     formData.append(`images`, file); // Append each file
   });
-
 
   try {
     const response = await dispatch(sendCardData(formData));
@@ -569,7 +576,7 @@ useEffect(() => {
                 openBlock === 'sub' &&
                 <form className='border p-4 mt-2 flex flex-col flex-wrap justify-around items-start'>
                   <button className='mb-3 bg-gray-200 p-2 hover:bg-green-400' onClick={(e) => uploadData(e, 'catalog')}>Обновить категорию</button>
-                  <div className='border  p-1 w-full flex flex-wrap'>
+                  <div className='border  p-1 w-full flex flex-wrap mb-3'>
                   {
                   catalogAll && catalogAll.map((item: any, index: number) => (
                     <button 
@@ -637,12 +644,12 @@ useEffect(() => {
               
             </div>
             <div className='border mt-2'>
-              <h2 className='font-semibold text-xl p-3  cursor-pointer hover:bg-green-100' onClick={(e) => {toggleBlock('card'); uploadData(e, 'catalog')}}>Карточка товара</h2>
+              <h2 className='font-semibold text-xl p-3  cursor-pointer hover:bg-green-100' onClick={() => toggleBlock('card')}>Карточка товара</h2>
               <p className='pl-3'>Все поля обязательны</p>
               {
                 openBlock === 'card' &&
                 <form className='border p-4 mt-2 flex flex-col flex-wrap justify-around items-start'>
-                    {/* <button className='mb-3 bg-gray-200 p-2 hover:bg-green-400' onClick={(e) => uploadData(e, 'catalog')}>Обновить категорию</button> */}
+                    <button className='mb-3 bg-gray-200 p-2 hover:bg-green-400' onClick={(e) => uploadData(e, 'catalog')}>Обновить категорию</button>
                     <p>Название каталога</p>
                     <div className='border  p-1 w-full flex flex-wrap'>
                       
