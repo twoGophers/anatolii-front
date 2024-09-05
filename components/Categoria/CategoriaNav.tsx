@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useAppSelector } from '@/store/hooks';
 import { useLang } from '@/hooks/useLang ';
+import { Catalog } from '@/typescript'; 
 
 export default function CategoriaNav() {
   const { isLangLoaded } = useLang();
@@ -13,6 +14,7 @@ export default function CategoriaNav() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const lang = useAppSelector((state) => state.ui.ui);
+  const catalogAll  = useAppSelector((state) => state.catalog.catalogAll as Catalog[]);
 
   const handleToggle = (index: number, item: string) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -39,7 +41,7 @@ export default function CategoriaNav() {
 
   if (!isLangLoaded) {
     return null;
-  }
+  };
 
   return (
     <div>
@@ -47,7 +49,8 @@ export default function CategoriaNav() {
         {lang === "RU" ? 'Категории товаров' : 'Categorii de produse'}
       </h5>
       <ul className='text-[#727272]'>
-        {data?.map((item, index) => (
+        {
+        catalogAll.map((item, index) => (
           <li key={index} className="border-gray-300">
             <div
               className="flex justify-between items-center py-2 cursor-pointer"
@@ -68,7 +71,7 @@ export default function CategoriaNav() {
             <div className={`accordion-content ${(openIndex === index || item.url === router.query.url) ? 'open animation-nav' : ''}`}>
               {item.items && (
                 <ul className="pl-4">
-                  {item.items.map((subItem) => (
+                  {item.items.map((subItem: any) => (
                     <li
                       key={subItem.id}
                       onClick={() => handleToggleSub(lang === "RU" ? subItem.name : subItem.nameMD)}

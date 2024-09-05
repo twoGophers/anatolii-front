@@ -14,3 +14,25 @@ export interface Card {
     price: string;
     imageUpdate: File[];
   }
+
+  export interface SubCatalog {
+    name: string;       
+    nameMD: string;     
+    url: string;        
+    image: string[];    
+    catalogUrl: string; 
+  }
+  
+  export interface Catalog {
+    _id: {
+      $oid: string; 
+    };
+    catalog: string;     
+    catalogMD: string;   
+    title: string;       
+    titleMD: string;     
+    url: string;         
+    image: string[];     
+    items: SubCatalog[]; 
+    __v: number;         
+  }

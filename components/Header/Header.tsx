@@ -4,11 +4,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPhone, faChevronDown } from "@fortawesome/free-solid-svg-icons";
-import data from "@/db/catalog.json";
 import Logo from "@/assets/logo.png";
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { updateLang } from '@/store/slices/ui';
 import { useLang } from '@/hooks/useLang ';
+import { Catalog } from "@/typescript";
 
 export default function Header() {
   const { isLangLoaded } = useLang();
@@ -17,6 +17,7 @@ export default function Header() {
   const [isAnimating, setIsAnimating] = useState(false);
 
   const lang = useAppSelector((state) => state.ui.ui);
+  const catalogAll = useAppSelector((state) => state.catalog.catalogAll as Catalog[]);
   const dispatch = useAppDispatch();
 
 
@@ -89,13 +90,14 @@ export default function Header() {
                 } absolute z-10 w-48 top-4 -left-28 flex flex-col text-[#777] text-sm`}
               >
                 <div className="bg-white p-3 mt-3 shadow-lg">
-                  {data.map((item, index) => (
+                  { 
+                    catalogAll.map((item, index) => (
                     <Link
                       key={index}
                       href={`/catalog/${item.url}`}
                       className={`my-2 after-line ${router.asPath === `/catalog/${item.url}` ? 'active' : ''}`}
                     >
-                      <span key={item.id}>{ lang === "RU" ? item.catalog : item.catalogMD }</span>
+                      <span>{ lang === "RU" ? item.catalog : item.catalogMD }</span>
                     </Link>
                   ))}
                 </div>

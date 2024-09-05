@@ -1,14 +1,15 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from '../../axios';
+import { Catalog, Card } from '@/typescript';
 
-interface DeleteItemPayload {
-  id: number | string;
-  name: string;
+interface CatalogState {
+  catalog: Catalog
+  cardArr: Card;
 }
 
 const initialState = {
   catalog: null,
-  catalogAll: null,
+  catalogAll: [],
   subloading: false,
   suberror: '',
   subCatalogAll: null,

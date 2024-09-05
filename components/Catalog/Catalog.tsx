@@ -85,7 +85,7 @@ export default function Catalog( {lang}: any ) {
     
 
     return (
-      <div className={`mt-2 grid grid-cols-${countItems} gap-7`}>
+      <div className={`mt-2 grid grid-cols-3 gap-7`}>
         {items.map((item) => (
           <Link
             href={`card/${item.url}`}

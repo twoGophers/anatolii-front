@@ -80,7 +80,7 @@ export default function CategoryaList() {
             <span className={`${activeIcon === 4 && 'font-bold'}`}> 40 </span> /
             <span className={`${activeIcon === 5 && 'font-bold'}`}> 60 </span>
           </div>
-          <div className='flex flex-row gap-x-4'>
+          {/* <div className='flex flex-row gap-x-4'>
             <span
               className='cursor-pointer'
               onClick={() => handleIconClick(3)}
@@ -99,7 +99,7 @@ export default function CategoryaList() {
             >
               <Icon icon={5} fill={activeIcon === 5} />
             </span>
-          </div>
+          </div> */}
           <div>
             <div>
             <select
