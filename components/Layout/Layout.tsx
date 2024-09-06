@@ -24,7 +24,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     dispatch(getCatalogItems());
-    dispatch(getCardAll());
   }, [dispatch]);
 
   return (

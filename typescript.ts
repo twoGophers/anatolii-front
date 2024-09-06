@@ -1,8 +1,9 @@
 export interface Card {
+    _id: string;
     catalog: string;
     catalogMD: string;
     url: string;
-    image: string[];       // Ensure image is an array
+    images: string[];       // Ensure image is an array
     subCatalog: string;
     subCatalogMD: string;
     name: string;
@@ -11,7 +12,7 @@ export interface Card {
     urlSubCatalog: string;
     description: string;
     descriptionRO: string;
-    price: string;
+    price: number ;
     imageUpdate: File[];
   }
 
@@ -35,4 +36,14 @@ export interface Card {
     image: string[];     
     items: SubCatalog[]; 
     __v: number;         
+  }
+
+  export interface CatalogState {
+    catalog: Catalog[];
+    catalogAll: any[];
+    subloading: boolean;
+    suberror: string;
+    subCatalogAll: SubCatalog[];
+    cardArr: any;
+    cardUrl: Card[]; 
   }

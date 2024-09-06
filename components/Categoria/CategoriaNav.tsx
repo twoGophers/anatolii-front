@@ -16,13 +16,19 @@ export default function CategoriaNav() {
   const lang = useAppSelector((state) => state.ui.ui);
   const catalogAll  = useAppSelector((state) => state.catalog.catalogAll as Catalog[]);
 
-  const handleToggle = (index: number, item: string) => {
+  const handleToggle = (index: number, item: any) => {
     setOpenIndex(openIndex === index ? null : index);
-    localStorage.setItem('catalogName', item);
+    if( item.title) {
+      localStorage.setItem('catalogNameRU', item.title); 
+      localStorage.setItem('catalogNameMD', item.titleMD); 
+    }
   };
 
-  const handleToggleSub = (item: string) => {
-    localStorage.setItem('catalogName', item);
+  const handleToggleSub = (item: any) => {
+    if ( item.name) {
+      localStorage.setItem('catalogNameRU', item.name); 
+      localStorage.setItem('catalogNameMD', item.nameMD); 
+    }
   };
 
   useEffect(() => {
@@ -54,27 +60,31 @@ export default function CategoriaNav() {
           <li key={index} className="border-gray-300">
             <div
               className="flex justify-between items-center py-2 cursor-pointer"
-              onClick={() => handleToggle(index, item.catalog)}
+              onClick={() => handleToggle(index, item)}
             >
               <Link href={`${item.url}`}>
                 <span className={`text-base ${item.url === router.query.url && 'text-black font-semibold'}`}>
                   {lang === "RU" ? item.catalog : item.catalogMD}
                 </span>
               </Link>
-              <span>
-                <FontAwesomeIcon
-                  icon={faChevronDown}
-                  className={`w-3 rotate-icon ${(openIndex === index || item.url === router.query.url) ? 'open' : ''}`}
-                />
-              </span>
+              {
+                item.items.length > 0 && 
+                <span>
+                  <FontAwesomeIcon
+                    icon={faChevronDown}
+                    className={`w-3 rotate-icon ${(openIndex === index) ? 'open' : ''}`}
+                  />
+                </span>
+              }
+              
             </div>
-            <div className={`accordion-content ${(openIndex === index || item.url === router.query.url) ? 'open animation-nav' : ''}`}>
+            <div className={`accordion-content ${(openIndex === index) ? 'open animation-nav' : ''}`}>
               {item.items && (
                 <ul className="pl-4">
                   {item.items.map((subItem: any) => (
                     <li
-                      key={subItem.id}
-                      onClick={() => handleToggleSub(lang === "RU" ? subItem.name : subItem.nameMD)}
+                      key={subItem.url}
+                      onClick={() => handleToggleSub(subItem)}
                       className={`text-base py-1 text-base ${subItem.url === router.query.url && 'text-black font-semibold'}`}
                     >
                       <Link href={`${subItem.url}`}>

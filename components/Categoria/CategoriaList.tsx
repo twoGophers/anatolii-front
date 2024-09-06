@@ -37,13 +37,17 @@ export default function CategoryaList() {
       catalogMain: lang === "RU" ? 'Каталог' : 'Catalog',
       catalogMainUrl: '/catalog/catalog',
   
-      catalog: localStorage.getItem('catalogName'),
+      catalog: lang === "RU" ? localStorage.getItem('catalogNameRU') : localStorage.getItem('catalogNameMD'),
       catalogUrl: `/catalog/${router.query.url}`,
-  
-    }
+    };
+
+    if(router.asPath === '/catalog/catalog') {
+      url.catalog = url.catalogMain;
+      url.catalogUrl = '';
+    };
 
     setUrlBread(url);
-  }, [router]);
+  }, [router, lang]);
 
   useEffect(() => {
     localStorage.setItem('icon', '3');

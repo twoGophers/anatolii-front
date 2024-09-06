@@ -9,6 +9,7 @@ import { fullImageshow } from '@/store/slices/ui';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
 import HeadComponent from '@/components/Head/Head';
+import { getCardAll } from '@/store/slices/catalog';
 
 export default function Home() {
   const dispatch = useAppDispatch();
@@ -18,6 +19,20 @@ export default function Home() {
   const openFullscreen = (image: any) => {
     dispatch(fullImageshow({ show: true, image: image }));
   };
+
+  const handleLSCatalogName = (item: any) => {
+    if( item.title) {
+      localStorage.setItem('catalogNameRU', item.title); 
+      localStorage.setItem('catalogNameMD', item.titleMD); 
+    } else if ( item.name) {
+      localStorage.setItem('catalogNameRU', item.name); 
+      localStorage.setItem('catalogNameMD', item.nameMD); 
+    }
+  }
+
+  useEffect(() => {
+    dispatch(getCardAll());
+  }, [dispatch])
 
   return (
     <section className='home container'>
@@ -31,7 +46,7 @@ export default function Home() {
         <div className="home-group-1 grid grid-cols-2 grid-rows-2 gap-5">
           {
             catalogAll && catalogAll?.map(( item: any ) => (
-            <Link key={item.id || item._id} href={`catalog/${item.url}`} className='relative group'>
+            <Link key={item.id || item._id} href={`catalog/${item.url}`}  onClick={() => handleLSCatalogName(item)} className='relative group'>
               <div className='overflow-hidden shadow-lg relative transform transition-all duration-500 ease-in-out group-hover:shadow-2xl h-[300px] w-full'>
                 {
                   item.image &&       
@@ -67,7 +82,7 @@ export default function Home() {
               <div className='flex w-full gap-5'>
               {
               catalogAll && catalogAll[0]?.items?.slice(0, 4).map(( item: any ) => (
-                <Link key={item.url || item.name} href={`catalog/${item.url}`} className='relative group w-full'>
+                <Link key={item.url || item.name} href={`catalog/${item.url}`} onClick={() => handleLSCatalogName(item)} className='relative group w-full'>
                   <div className='overflow-hidden shadow-lg relative transform transition-all duration-500 ease-in-out group-hover:shadow-2xl h-[200px]'>
                     {
                       item?.image &&       
@@ -107,7 +122,7 @@ export default function Home() {
               <div className='flex w-full gap-5'>
               {
                 catalogAll && catalogAll[1]?.items?.slice(0, 3).map(( item: any ) => (
-                <Link key={item.url || item.name} href={`catalog/${item.url}`} className='relative group w-full'>
+                <Link key={item.url || item.name}  onClick={() => handleLSCatalogName(item)} href={`catalog/${item.url}`} className='relative group w-full'>
                   <div className='overflow-hidden shadow-lg relative transform transition-all duration-500 ease-in-out group-hover:shadow-2xl h-[250px]'>
                     {
                       item?.image &&       
