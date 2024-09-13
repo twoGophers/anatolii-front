@@ -1,18 +1,16 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from '../../axios';
+import { CatalogState } from '@/typescript'
 
-interface DeleteItemPayload {
-  id: number | string;
-  name: string;
-}
-
-const initialState = {
-  catalog: null,
-  catalogAll: null,
+const initialState: CatalogState = {
+  catalog: [],
+  catalogAll: [],
   subloading: false,
   suberror: '',
-  subCatalogAll: null,
-  cardArr: null
+  subCatalogAll: [],
+  cardArr: null,
+  cardUrl: [],
+  cardOne: null
 };
 
 export const sendCardData = createAsyncThunk(
@@ -149,6 +147,32 @@ export const putUpdateCard = createAsyncThunk(
   }
 );
 
+// Получение карточек по url категорий
+export const getCardQueryUrl = createAsyncThunk(
+  'catalog/getCardQuery',
+  async({ url }: { url: string }) => {
+    try {
+      const response = await axios.get(`/catalog/cards-url/${url}`);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+);
+
+export const getOneCard = createAsyncThunk(
+  'catalog/getOneCard',
+  async({ url }: { url: string }) => {
+    try {
+      const response = await axios.get(`/catalog/card-one/${url}`);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+);
+
+
 const catalogSlice = createSlice({
   name: 'catalog',
   initialState,
@@ -156,13 +180,13 @@ const catalogSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(catalogMain.pending, (state) => {
-        state.catalog = null;
+        state.catalog = [];
       })
       .addCase(catalogMain.fulfilled, (state, action) => {
         state.catalog = action.payload;
       })
       .addCase(catalogMain.rejected, (state) => {
-        state.catalog = null;
+        state.catalog = [];
       })
       .addCase(getCatalogItems.pending, (state) => {
         state.subloading = true;
@@ -178,13 +202,13 @@ const catalogSlice = createSlice({
         state.suberror = action.payload as string;
       })
       .addCase(getSubItems.pending, (state) => {
-        state.subCatalogAll = null;
+        state.subCatalogAll = [];
       })
       .addCase(getSubItems.fulfilled, (state, action) => {
         state.subCatalogAll = action.payload;
       })
       .addCase(getSubItems.rejected, (state) => {
-        state.subCatalogAll = null;
+        state.subCatalogAll = [];
       })
       .addCase(getCardAll.pending, (state) => {
         state.cardArr = null;
@@ -194,6 +218,24 @@ const catalogSlice = createSlice({
       })
       .addCase(getCardAll.rejected, (state) => {
         state.cardArr = null;
+      })
+      .addCase(getCardQueryUrl.pending, (state) => {
+        state.cardUrl = [];
+      })
+      .addCase(getCardQueryUrl.fulfilled, (state, action) => {
+        state.cardUrl = action.payload;
+      })
+      .addCase(getCardQueryUrl.rejected, (state) => {
+        state.cardUrl = [];
+      })
+      .addCase(getOneCard.pending, (state) => {
+        state.cardOne = null;
+      })
+      .addCase(getOneCard.fulfilled, (state, action) => {
+        state.cardOne = action.payload.length > 0 ? action.payload[0] : null;
+      })
+      .addCase(getOneCard.rejected, (state) => {
+        state.cardOne = null;
       });
   },
 });

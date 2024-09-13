@@ -6,6 +6,7 @@ import { Thumbs, Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules'
 import Image from 'next/image';
 import { setModalFull } from '@/store/slices/ui';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { baseUrl } from '@/hooks/base_url';
 
 
 interface FullscreenSliderProps {
@@ -47,7 +48,7 @@ const closeFullscreen = () => {
             <SwiperSlide key={index} className="relative w-full h-full">
               <div className="relative w-full h-full">
                 <Image
-                  src={`/items/${item}`}
+                  src={`${baseUrl}/${item}`}
                   alt={item}
                   fill
                   className="object-contain"

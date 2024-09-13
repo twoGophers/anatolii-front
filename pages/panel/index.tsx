@@ -11,6 +11,7 @@ const Editor = dynamic(() => import('react-draft-wysiwyg').then(mod => mod.Edito
 });
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import draftToHtml from 'draftjs-to-html';
+import { baseUrl } from '@/hooks/base_url';
 
 export default function Panel() {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -1016,7 +1017,7 @@ useEffect(() => {
                                         <div key={item} className='relative'>
                                           <p>{item.image}</p>
                                           <img
-                                            src={`http://localhost:3001/${item}`}
+                                            src={`${baseUrl}/${item}`}
                                             alt={`Selected ${index}`}
                                             className="w-full h-20 object-cover"
                                           />

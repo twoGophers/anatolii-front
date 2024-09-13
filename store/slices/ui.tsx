@@ -7,6 +7,11 @@ const initialState = {
     index: null,
     images: [],
   },
+
+  modalFullImage: {
+    show: false,
+    image: null
+  }
 };
 
 const uiSlice = createSlice({
@@ -18,10 +23,16 @@ const uiSlice = createSlice({
     },
     setModalFull: (state, action) => {
       state.modalFull = action.payload;
+    },
+    fullImageshow: ( state, action) => {
+      console.log(action.payload.show);
+      console.log(action.payload.image);
       
+      state.modalFullImage.show = action.payload.show;
+      state.modalFullImage.image = action.payload.image;
     }
   },
 });
 
-export const { updateLang, setModalFull } = uiSlice.actions;
+export const { updateLang, setModalFull, fullImageshow } = uiSlice.actions;
 export default uiSlice.reducer;
