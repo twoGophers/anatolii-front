@@ -14,6 +14,8 @@ export interface Card {
     descriptionRO: string;
     price: number ;
     imageUpdate: File[];
+    views: number,
+    createdAt: any
   }
 
   export interface SubCatalog {
@@ -46,4 +48,5 @@ export interface Card {
     subCatalogAll: SubCatalog[];
     cardArr: any;
     cardUrl: Card[]; 
+    cardOne: Card | null; 
   }

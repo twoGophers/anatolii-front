@@ -59,7 +59,7 @@ export default function CategoriaNav() {
         catalogAll.map((item, index) => (
           <li key={index} className="border-gray-300">
             <div
-              className="flex justify-between items-center py-2 cursor-pointer"
+              className="flex justify-between items-start py-2 cursor-pointer"
               onClick={() => handleToggle(index, item)}
             >
               <Link href={`${item.url}`}>

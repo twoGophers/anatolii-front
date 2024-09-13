@@ -9,7 +9,8 @@ const initialState: CatalogState = {
   suberror: '',
   subCatalogAll: [],
   cardArr: null,
-  cardUrl: []
+  cardUrl: [],
+  cardOne: null
 };
 
 export const sendCardData = createAsyncThunk(
@@ -159,6 +160,19 @@ export const getCardQueryUrl = createAsyncThunk(
   }
 );
 
+export const getOneCard = createAsyncThunk(
+  'catalog/getOneCard',
+  async({ url }: { url: string }) => {
+    try {
+      const response = await axios.get(`/catalog/card-one/${url}`);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+);
+
+
 const catalogSlice = createSlice({
   name: 'catalog',
   initialState,
@@ -213,6 +227,15 @@ const catalogSlice = createSlice({
       })
       .addCase(getCardQueryUrl.rejected, (state) => {
         state.cardUrl = [];
+      })
+      .addCase(getOneCard.pending, (state) => {
+        state.cardOne = null;
+      })
+      .addCase(getOneCard.fulfilled, (state, action) => {
+        state.cardOne = action.payload.length > 0 ? action.payload[0] : null;
+      })
+      .addCase(getOneCard.rejected, (state) => {
+        state.cardOne = null;
       });
   },
 });

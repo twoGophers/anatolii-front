@@ -9,12 +9,11 @@ import { baseUrl } from '@/hooks/base_url';
 import { Card } from '@/typescript';
 
 
-export default function Catalog( {lang}: any ) {
+export default function Catalog( {lang, cardUrl}: any ) {
     const router = useRouter();
     const dispatch = useAppDispatch();
     const { isLangLoaded } = useLang();
-    const [ countItems, setCountItems ] = useState(localStorage.getItem("icon"));
-    const {cardUrl} = useAppSelector((state) => state.catalog);
+    const [ countItems, setCountItems ] = useState<any>(localStorage.getItem("icon"));
 
     useEffect(() => {
         let icon = localStorage.getItem('icon');
@@ -26,6 +25,8 @@ export default function Catalog( {lang}: any ) {
       const url = Array.isArray(router.query.url) ? router.query.url[0] : router.query.url;
     
       if (typeof url === 'string') {
+        console.log(url);
+        
         dispatch(getCardQueryUrl({ url }));
       }
     }, [router.query.url]);
@@ -35,7 +36,7 @@ export default function Catalog( {lang}: any ) {
     }
 
     return (
-      <div className={`mt-2 grid grid-cols-3 gap-7`}>
+      <div className={`mt-2 grid grid-cols-${parseInt(countItems)} gap-7`}>
         { cardUrl && cardUrl.map((item: Card) => (
           <Link
             href={`card/${item.url}`}

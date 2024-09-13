@@ -26,6 +26,7 @@ export default function FullImage({ show, image } : any) {
                     <div className="relative w-3/4 h-3/4 slider-show-img-smoth">
                         {image && (
                             <Image
+                                priority
                                 src={`${baseUrl}/${image}`}
                                 fill
                                 alt="Fullscreen Image"
