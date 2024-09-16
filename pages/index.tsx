@@ -32,7 +32,10 @@ export default function Home() {
 
   useEffect(() => {
     dispatch(getCardAll());
-  }, [dispatch])
+  }, [dispatch]);
+
+  console.log(baseUrl);
+  
 
   return (
     <section className='home container'>
