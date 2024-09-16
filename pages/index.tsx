@@ -34,9 +34,6 @@ export default function Home() {
     dispatch(getCardAll());
   }, [dispatch]);
 
-  console.log(baseUrl);
-  
-
   return (
     <section className='home container'>
 
