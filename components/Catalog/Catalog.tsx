@@ -13,13 +13,9 @@ export default function Catalog( {lang, cardUrl}: any ) {
     const router = useRouter();
     const dispatch = useAppDispatch();
     const { isLangLoaded } = useLang();
-    const [ countItems, setCountItems ] = useState<any>(localStorage.getItem("icon"));
+    const { icon } = useAppSelector((state) => state.ui);
+    const [animationClass, setAnimationClass] = useState<string>('');
 
-    useEffect(() => {
-        let icon = localStorage.getItem('icon');
-        setCountItems(icon);
-
-    }, [localStorage.getItem('icon')]);
 
     useEffect(() => {
       const url = Array.isArray(router.query.url) ? router.query.url[0] : router.query.url;
@@ -30,13 +26,21 @@ export default function Catalog( {lang, cardUrl}: any ) {
         dispatch(getCardQueryUrl({ url }));
       }
     }, [router.query.url]);
+    
+    useEffect(() => {
+      setAnimationClass('fade-out');
+      const timer = setTimeout(() => {
+        setAnimationClass('fade-in');
+      }, 300);
+      return () => clearTimeout(timer);
+    }, [icon]);
 
     if (!isLangLoaded) {
         return null;
     }
 
     return (
-      <div className={`mt-2 grid grid-cols-${parseInt(countItems)} gap-7`}>
+      <div className={`mt-2 grid grid-cols-${icon as Number} gap-7 container-animation ${animationClass}`}>
         { cardUrl && cardUrl.map((item: Card) => (
           <Link
             href={`card/${item.url}`}

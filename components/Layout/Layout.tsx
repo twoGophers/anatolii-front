@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import FullscreenSlider from '@/components/Slider/FullscreenSlider';
 import { getCardAll, getCatalogItems } from '@/store/slices/catalog';
 import FullImage from "../Modal/FullImage";
+import MenuMobile from "../Modal/MenuMobile";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const dispatch = useAppDispatch();
@@ -52,6 +53,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         show={modalFullImage.show}
         image={modalFullImage.image}
       />
+
+      <MenuMobile />
       
     </div>
   );

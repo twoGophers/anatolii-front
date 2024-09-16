@@ -6,6 +6,8 @@ import { useLang } from '@/hooks/useLang ';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 import { useRouter } from 'next/router';
 import HeadComponent from '../Head/Head';
+import { changeIcon } from '@/store/slices/ui';
+
 
 interface URL {
   main: string;
@@ -17,11 +19,13 @@ interface URL {
 }
 
 export default function CategoryList() {
+
+  const dispatch = useAppDispatch();
   const router = useRouter();
   const { isLangLoaded } = useLang();
   const lang = useAppSelector((state) => state.ui.ui);
+  const { icon } = useAppSelector((state) => state.ui);
   const [urlBread, setUrlBread] = useState<URL | undefined>(undefined);
-  const [activeIcon, setActiveIcon] = useState<any>(null);
   const [catalogArr, setCatalogArr] = useState<any[]>([]);
 
   const { cardUrl } = useAppSelector((state) => state.catalog);
@@ -49,17 +53,6 @@ export default function CategoryList() {
     setUrlBread(url);
   }, [router, lang]);
 
-  useEffect(() => {
-    localStorage.setItem('icon', '3');
-  }, []);
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const storedIcon = localStorage.getItem('icon');
-      setActiveIcon(typeof storedIcon === 'string' ? parseInt(storedIcon) : null);
-    }
-  }, []);
-
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
   
@@ -81,8 +74,7 @@ export default function CategoryList() {
   };
 
   const handleIconClick = (icon: number) => {
-    setActiveIcon(icon);
-    localStorage.setItem('icon', `${icon}`);
+    dispatch(changeIcon(icon));
   };
 
   if (!isLangLoaded) {
@@ -106,19 +98,19 @@ export default function CategoryList() {
               className='cursor-pointer'
               onClick={() => handleIconClick(3)}
             >
-              <Icon icon={3} fill={activeIcon === 3} />
+              <Icon icon={3} fill={icon === 3} />
             </span>
             <span
               className='cursor-pointer'
               onClick={() => handleIconClick(4)}
             >
-              <Icon icon={4} fill={activeIcon === 4} />
+              <Icon icon={4} fill={icon === 4} />
             </span>
             <span
               className='cursor-pointer'
               onClick={() => handleIconClick(5)}
             >
-              <Icon icon={5} fill={activeIcon === 5} />
+              <Icon icon={5} fill={icon === 5} />
             </span>
           </div>
           {/* <div>

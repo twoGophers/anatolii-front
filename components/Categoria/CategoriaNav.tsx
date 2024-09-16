@@ -6,7 +6,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useAppSelector } from '@/store/hooks';
 import { useLang } from '@/hooks/useLang ';
-import { Catalog } from '@/typescript'; 
+import { Catalog } from '@/typescript';
+
 
 export default function CategoriaNav() {
   const { isLangLoaded } = useLang();
