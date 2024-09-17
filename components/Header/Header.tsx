@@ -82,7 +82,7 @@ export default function Header() {
             <li className={`${isActive('/')} max-md:my-2`}>
               <Link href={"/"}>
                 <span className="after-line uppercase">
-                  {lang === "RU" ? "ГЛАВНАЯ" : "Principală"}
+                  {lang === "RU" ? "Главная" : "Principală"}
                 </span>
               </Link>
             </li>
@@ -93,7 +93,7 @@ export default function Header() {
             >
               <Link href={`/catalog/catalog`} className="flex flex-row items-center relative">
                 <span className="after-line after-line__arrow uppercase">
-                  {lang === "RU" ? "КАТАЛОГ" : "Catalog"}
+                  {lang === "RU" ? "Каталог" : "Catalog"}
                 </span>
                 <FontAwesomeIcon icon={faChevronDown} className="w-3 ml-1" />
               </Link>
@@ -121,21 +121,21 @@ export default function Header() {
             <li className={` max-md:my-2 ${isActive('/galereiia')}`}>
               <Link href={" /galereiia"}>
                 <span className="after-line uppercase">
-                  {lang === "RU" ? "ГАЛЕРЕЯ" : "Galerie"}
+                  {lang === "RU" ? "Галерея" : "Galerie"}
                 </span>
               </Link>
             </li>
             <li className={` max-md:my-2 ${isActive('/compania')}`}>
               <Link href={"/compania"}>
                 <span className="after-line uppercase">
-                  {lang === "RU" ? "О КОМПАНИИ" : "Despre noi"}
+                  {lang === "RU" ? "О компании" : "Despre noi"}
                 </span>
               </Link>
             </li>
             <li className={` max-md:my-2 ${isActive('/contacti')}`}>
               <Link href={"/contacti"}>
                 <span className="after-line uppercase">
-                  {lang === "RU" ? "КОНТАКТЫ" : "Contacte"}
+                  {lang === "RU" ? "Контакты" : "Contacte"}
                 </span>
               </Link>
             </li>

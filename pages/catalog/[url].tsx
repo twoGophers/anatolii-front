@@ -7,7 +7,9 @@ export default function Catalog() {
 
   return (
     <div className='container'>
-      <MarginTop />
+      <div className='max-md:hidden'>
+        <MarginTop />
+      </div>
       <div className="flex flex-row gap-8">
         <div className="w-1/4">
           <CategoriaNav />

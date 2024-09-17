@@ -28,12 +28,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   }, [dispatch]);
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <div className={`container-animation ${animationClass} flex-grow`}>
+    <div className="flex flex-col min-h-screen bg-white ">
+      <div className={`container-animation ${animationClass} flex-grow max-md:mt-4`}>
         <div className="container">
           <Header />
         </div>
-        <div className="main flex-grow">
+        <div className="flex-grow mb-24 mt-4 md:mt-5">
           {children}
         </div>
       </div>
