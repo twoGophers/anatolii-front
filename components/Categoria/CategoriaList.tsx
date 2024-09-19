@@ -7,6 +7,7 @@ import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 import { useRouter } from 'next/router';
 import HeadComponent from '../Head/Head';
 import { changeIcon } from '@/store/slices/ui';
+import { showMobileMenuLink } from '@/store/slices/ui'
 
 
 interface URL {
@@ -77,6 +78,10 @@ export default function CategoryList() {
     dispatch(changeIcon(icon));
   };
 
+  const handleShowMobileMenu = () => {
+    dispatch(showMobileMenuLink(true));
+  }
+
   if (!isLangLoaded) {
     return null;
   }
@@ -93,7 +98,7 @@ export default function CategoryList() {
       <div className='flex w-full justify-between text-sm'>
         <Breadcrumbs bread={urlBread} />
         <div className="filter flex flex-row gap-x-10">
-          <div className='flex flex-row gap-x-4'>
+          <div className='flex flex-row gap-x-4 max-lg:hidden'>
             <span
               className='cursor-pointer'
               onClick={() => handleIconClick(3)}
@@ -121,7 +126,7 @@ export default function CategoryList() {
           </div> */}
           <select
             name="orderby"
-            className="orderby border-b-2 border-solid border-[#a6c4b1] cursor-pointer -mt-1"
+            className="orderby border-b-2 border-solid border-[#a6c4b1] cursor-pointer -mt-1 max-lg:hidden"
             defaultValue="menu_order"
             onChange={handleChange}
           >
@@ -144,6 +149,38 @@ export default function CategoryList() {
         </div>
       </div>
       <div>
+        <div className='max-lg:flex lg:hidden w-full justify-between my-3'>
+          <div>
+            <div onClick={handleShowMobileMenu} className="lg:hidden burger-container group w-6 h-4 flex flex-col justify-between items-start cursor-pointer">
+              <span className="block w-full h-0.5 bg-black origin-left transition-all duration-300 group-hover:w-1/2 group-hover:bg-gray-400"></span>
+              <span className="block w-full h-0.5 bg-black transition-all duration-300 group-hover:bg-gray-400"></span>
+              <span className="block w-full h-0.5 bg-black origin-left transition-all duration-300 group-hover:w-1/2 group-hover:bg-gray-400"></span>
+            </div>
+          </div>
+          <select
+            name="orderby"
+            className="orderby border-b-2 border-solid border-[#a6c4b1] cursor-pointer -mt-1"
+            defaultValue="menu_order"
+            onChange={handleChange}
+          >
+            <option value="menu_order">
+              {lang === "RU" ? "Исходная сортировка" : "Sortare inițială"}
+            </option>
+            <option value="popularity">
+              {lang === "RU" ? "По популярности" : "După popularitate"}
+            </option>
+            <option value="date">
+              {lang === "RU" ? "Сортировка по более позднему" : "Sortare după cele mai recente"}
+            </option>
+            <option value="price">
+              {lang === "RU" ? "Цены: по возрастанию" : "Prețuri: în ordine crescătoare"}
+            </option>
+            <option value="price-desc">
+              {lang === "RU" ? "Цены: по убыванию" : "Prețuri: în ordine descrescătoare"}
+            </option>
+          </select>
+        </div>
+        <hr className="my-3" />
         <Catalog lang={lang} cardUrl={catalogArr} />
       </div>
     </section>

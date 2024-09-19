@@ -14,6 +14,9 @@ const initialState = {
   icon: 3,
   modalMobileMenu: {
     show: false
+  },
+  showMobileMenuLink: {
+    show: false
   }
 };
 
@@ -36,9 +39,12 @@ const uiSlice = createSlice({
     },
     showMobileMenu: (state, action) => {
       state.modalMobileMenu.show = action.payload;
+    },
+    showMobileMenuLink: (state, action) => {
+      state.showMobileMenuLink.show = action.payload;
     }
   },
 });
 
-export const { updateLang, setModalFull, fullImageshow, changeIcon, showMobileMenu } = uiSlice.actions;
+export const { updateLang, setModalFull, fullImageshow, changeIcon, showMobileMenu, showMobileMenuLink } = uiSlice.actions;
 export default uiSlice.reducer;

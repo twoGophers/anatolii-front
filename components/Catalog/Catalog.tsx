@@ -19,7 +19,9 @@ export default function Catalog({ lang, cardUrl }: any) {
     const url = Array.isArray(router.query.url) ? router.query.url[0] : router.query.url;
 
     if (typeof url === 'string') {
-      dispatch(getCardQueryUrl({ url }));
+      const response = dispatch(getCardQueryUrl({ url }));
+      console.log(response);
+      
     }
   }, [router.query.url]);
 
@@ -48,14 +50,22 @@ export default function Catalog({ lang, cardUrl }: any) {
     }
   };
 
+  if (!cardUrl) {
+    return (
+      <div className='text-xl font-semibold text-center mt-24'>
+        Нет карточек
+      </div>
+    );
+  }
+
   return (
-    <div className={`mt-2 grid ${getGridColumnsClass()} gap-7 container-animation ${animationClass}`}>
+    <div className={`catalog mt-2 grid ${getGridColumnsClass()} gap-7 container-animation ${animationClass}`}>
       {cardUrl &&
-        cardUrl.map((item: Card) => (
-          <Link href={`card/${item.url}`} key={item._id}>
+        baseUrl && cardUrl.map((item: Card) => (
+          <Link href={`card/${item.url}`} key={item._id} className='catalog__card'>
             <div className="w-full pt-[100%] relative overflow-hidden">
               <Image
-                src={`${baseUrl}/${item.images[0]}`}
+                src={item.images[0] ? `${baseUrl}/${item.images[0]}` : '/defaultimage.jpg'}
                 alt={item.images[0]}
                 fill
                 quality={100}
@@ -77,6 +87,7 @@ export default function Catalog({ lang, cardUrl }: any) {
             </div>
           </Link>
         ))}
+        {/* <div className='h-screen'></div> */}
     </div>
   );
 }

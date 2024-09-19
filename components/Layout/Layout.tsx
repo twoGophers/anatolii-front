@@ -6,6 +6,7 @@ import FullscreenSlider from '@/components/Slider/FullscreenSlider';
 import { getCardAll, getCatalogItems } from '@/store/slices/catalog';
 import FullImage from "../Modal/FullImage";
 import MenuMobile from "../Modal/MenuMobile";
+import MobileCatalog from "../Modal/MobileCatalog";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const dispatch = useAppDispatch();
@@ -33,7 +34,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <div className="container">
           <Header />
         </div>
-        <div className="flex-grow mb-24 mt-4 md:mt-5">
+        <div className="flex-grow mb-10 mb-24 mt-4 md:mt-5 ">
           {children}
         </div>
       </div>
@@ -55,6 +56,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       />
 
       <MenuMobile />
+      <MobileCatalog />
       
     </div>
   );

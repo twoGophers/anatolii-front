@@ -181,7 +181,7 @@ export default function Home() {
           cardArr && cardArr.map((item: any) => (
             <SwiperSlide key={item.id || item._id} className='relative group w-full cursor-pointer'>
               <div 
-                className='overflow-hidden relative transform transition-all duration-500 ease-in-out  h-[400px] max-md:h-[250px]'
+                className='overflow-hidden relative transform transition-all duration-500 ease-in-out  h-[400px] max-md:h-[250px] max-sm:h-[200px]'
                 onClick={() => openFullscreen(item.images[0])}
               >
                   <Image
