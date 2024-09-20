@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import FullscreenSlider from '@/components/Slider/FullscreenSlider';
+import FullscreenSlider from '@/components/Modal/FullscreenSlider';
 import { getCardAll, getCatalogItems } from '@/store/slices/catalog';
 import FullImage from "../Modal/FullImage";
 import MenuMobile from "../Modal/MenuMobile";
@@ -34,7 +34,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <div className="container">
           <Header />
         </div>
-        <div className="flex-grow mb-10 mb-24 mt-4 md:mt-5 ">
+        <div className="flex-grow mb-10 md:mb-24 mt-4 md:mt-5 ">
           {children}
         </div>
       </div>

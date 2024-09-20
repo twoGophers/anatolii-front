@@ -95,8 +95,8 @@
 }
 
 .swiper-fullscreen {
-  width: 100vh;
-  height: 100vh;
+  // width: 100vh;
+  // height: 100vh;
   button {
     position: absolute;
     top: 10px;
@@ -108,7 +108,6 @@
     color: white;
     cursor: pointer;
   }
-
 }
 
 
@@ -123,4 +122,31 @@
         opacity: 1;
         transform: scale(1);
     }
+}
+
+@media screen and (max-width: 768px) {
+  .main-slider {
+    margin-bottom: 20px;
+    .swiper-wrapper {
+      max-height: 400px;
+      .swiper-slide {
+        max-height: 400px;
+        height: 100%;
+        img {
+          width: auto;
+          max-height: 400px !important;
+          height: auto;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 460px) {
+  .main-slider {
+    margin-bottom: 20px;
+    .swiper-wrapper {
+      max-height: 300px;
+    }
+  }
 }

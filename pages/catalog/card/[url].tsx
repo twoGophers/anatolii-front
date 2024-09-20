@@ -125,14 +125,16 @@ export default function ProductCard() {
               <Swiper
                 modules={[Thumbs, Navigation, Pagination, Scrollbar, A11y]}
                 navigation
+                spaceBetween={2}
                 thumbs={{ swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null }}
                 className="main-slider swiper-card flex"
               >
                 {cardOne.images.map((item, index) => (
-                  <SwiperSlide key={index} className="relative w-full">
+                  <SwiperSlide key={index} className="relative w-full slider-card-main">
                     <Image
                       src={`${baseUrl}/${item}`}
                       alt={item}
+
                       width={1000}
                       height={100}
                       priority
@@ -153,7 +155,7 @@ export default function ProductCard() {
               <div dangerouslySetInnerHTML={{ __html: lang === 'RU' ? cardOne.description : cardOne.descriptionRO }} />
             </div>
             <hr />
-            <p>
+            <p className='mt-2'>
               <span className="font-semibold">{lang === 'RU' ? 'Категории: ' : 'Categorii: '}</span>
               <Link className="text-gray-500" href={`/catalog/${cardOne.urlCatalog}`}>
                 {lang === 'RU' ? cardOne.catalog : cardOne.catalogMD}
