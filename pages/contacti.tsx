@@ -18,9 +18,9 @@ export default function compania() {
         />
         {/* CEO */}
 
-      <h4 className='h4-size text-center'>Контакты</h4>
-      <div className='flex flex-row w-full justify-content-between gap-10 mt-4'>
-        <div className='w-2/5 flex flex-col'>
+      <h4 className=' text-lg md:text-xl font-bold text-center text-uppercase '>Контакты</h4>
+      <div className='flex flex-col-reverse lg:flex-row w-full justify-content-between gap-10 mt-4'>
+        <div className='w-full lg:w-2/5 flex flex-col'>
           <div className='flex-grow'>
             <h5 className='font-semibold text-lg active-link'>Адресс</h5>
             <p className='mt-2'>г.Кишинев ул.Надежда Руссо, нр.17</p>
@@ -34,7 +34,7 @@ export default function compania() {
             <p className='mt-2'>info@example.com</p>
           </div>
         </div>
-        <div className='w-3/5'>
+        <div className='w-full hidden  lg:w-3/5'>
           <YMaps>
             <div className='w-full h-full'>
               <Map defaultState={{ center, zoom }} className='w-full h-full'>

@@ -8,9 +8,13 @@ import FullImage from "../Modal/FullImage";
 import MenuMobile from "../Modal/MenuMobile";
 import MobileCatalog from "../Modal/MobileCatalog";
 
+import Image from 'next/image';
+import Preloader from "@/public/5.gif";
+
 export default function Layout({ children }: { children: React.ReactNode }) {
   const dispatch = useAppDispatch();
   const lang = useAppSelector((state) => state.ui.ui);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [animationClass, setAnimationClass] = useState<string>('');
   
   const modalFull = useAppSelector((state) => state.ui.modalFull);
@@ -25,8 +29,18 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   }, [lang]);
 
   useEffect(() => {
-    dispatch(getCatalogItems());
+    dispatch(getCatalogItems()).then(() => {
+      setIsLoading(true);
+    });
   }, [dispatch]);
+
+  if (!isLoading) {
+    return (
+      <div className="h-screen w-full flex justify-center items-center">
+        <Image src={Preloader} alt="Loading..." width={50} height={50} />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-white ">
@@ -57,7 +71,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
       <MenuMobile />
       <MobileCatalog />
-      
     </div>
   );
 }
