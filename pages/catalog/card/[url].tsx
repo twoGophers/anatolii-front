@@ -81,10 +81,10 @@ export default function ProductCard() {
         {/* SEO */}
         <Margin />
         <Breadcrumbs bread={urlBread} />
-        <div className="w-full flex flex-row gap-x-7 justify-between mt-2">
-          <div className="w-1/2 flex flex-row gap-x-6">
+        <div className=" w-full flex flex-col gap-x-7 justify-between mt-2 md:flex-row">
+          <div className="card-slider w-full md:w-1/2 flex flex-row items-start gap-x-6">
             {/* Thumbs Swiper */}
-            <div className="w-1/4">
+            <div className="w-1/4 max-lg:hidden">
               <Swiper
                 onSwiper={(swiper) => setThumbsSwiper(swiper)} // Set the thumbsSwiper instance
                 modules={[Thumbs, Navigation, Pagination, Scrollbar, A11y]}
@@ -96,6 +96,16 @@ export default function ProductCard() {
                   prevEl: '.swiper-thumb-prev',
                 }}
                 className="thumbs-slider"
+                breakpoints={{
+                  1024: {
+                    direction: 'vertical',
+                    slidesPerView: 3,
+                  },
+                  0: {
+                    direction: 'horizontal',
+                    slidesPerView: 2,
+                  },
+                }}
               >
                 {cardOne.images.map((item, index) => (
                   <SwiperSlide className="relative cursor-pointer" key={index}>
@@ -110,21 +120,23 @@ export default function ProductCard() {
                 ))}
               </Swiper>
             </div>
-            <div className="w-3/4">
+            <div className="w-3/4 max-lg:w-full">
               {/* Main Swiper */}
               <Swiper
                 modules={[Thumbs, Navigation, Pagination, Scrollbar, A11y]}
                 navigation
+                spaceBetween={2}
                 thumbs={{ swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null }}
                 className="main-slider swiper-card flex"
               >
                 {cardOne.images.map((item, index) => (
-                  <SwiperSlide key={index} className="relative w-full">
+                  <SwiperSlide key={index} className="relative w-full slider-card-main">
                     <Image
                       src={`${baseUrl}/${item}`}
                       alt={item}
+
                       width={1000}
-                      height={1000}
+                      height={100}
                       priority
                       className="responsive object-contain"
                       onClick={() => openFullscreen(index)}
@@ -134,16 +146,16 @@ export default function ProductCard() {
               </Swiper>
             </div>
           </div>
-          <div className="w-1/2 flex flex-col content-between">
-            <h1 className="text-3xl font-bold">{lang === 'RU' ? cardOne.name : cardOne.nameMD}</h1>
-            <p className="text-[#a6c4b1] text-2xl font-medium mt-2">
+          <div className="w-full md:w-1/2 flex flex-col content-between">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold">{lang === 'RU' ? cardOne.name : cardOne.nameMD}</h1>
+            <p className="text-[#a6c4b1] text-2xl max-lg:text-xl font-medium mt-2">
               {new Intl.NumberFormat('ro-RO', { style: 'currency', currency: 'MDL' }).format(cardOne.price)}
             </p>
             <div className="description-card my-2">
               <div dangerouslySetInnerHTML={{ __html: lang === 'RU' ? cardOne.description : cardOne.descriptionRO }} />
             </div>
             <hr />
-            <p>
+            <p className='mt-2'>
               <span className="font-semibold">{lang === 'RU' ? 'Категории: ' : 'Categorii: '}</span>
               <Link className="text-gray-500" href={`/catalog/${cardOne.urlCatalog}`}>
                 {lang === 'RU' ? cardOne.catalog : cardOne.catalogMD}
@@ -159,39 +171,54 @@ export default function ProductCard() {
         </div>
       </div>
       <hr className="my-8" />
-      <div className="container similar-products">
-        <h2 className="h4-size my-5">{lang === 'RU' ? 'Похожие товары' : 'Produse similare'}</h2>
-        <Swiper
-          modules={[Navigation, Pagination, Scrollbar, A11y]}
-          spaceBetween={10}
-          slidesPerView={4}
-          navigation
-          // onSwiper={(swiper) => console.log(swiper)}
-          // onSlideChange={() => console.log('slide change')}
-          className="similar-products"
-        >
-          {cardUrl?.filter((item: any) => item._id !== cardOne._id).map((item: any) => (
-            <SwiperSlide key={item._id} className="relative group w-full cursor-pointer">
-              <div className="overflow-hidden shadow-lg relative transform transition-all duration-500 ease-in-out group-hover:shadow-2xl h-[250px]">
-                <Link href={`/catalog/card/${item.url}`}>
-                  <div className="relative w-full h-full">
-                    {item?.images && (
-                      <Image
-                        src={`${baseUrl}/${item?.images[0]}`}
-                        fill
-                        priority
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        alt="Home"
-                        className="object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
-                      />
-                    )}
-                  </div>
-                </Link>
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      </div>
+      {
+        cardUrl.length > 1 &&
+        <div className="container similar-products">
+          <h2 className="h4-size my-5">{lang === 'RU' ? 'Похожие товары' : 'Produse similare'}</h2>
+          <Swiper
+            modules={[Navigation, Pagination, Scrollbar, A11y]}
+            spaceBetween={10}
+            slidesPerView={4}
+            navigation
+            // onSwiper={(swiper) => console.log(swiper)}
+            // onSlideChange={() => console.log('slide change')}
+            className="similar-products"
+            breakpoints={{
+              1024: {
+                slidesPerView: 3,
+              },
+              420: {
+                slidesPerView: 2,
+              },
+              0: {
+                slidesPerView: 1,
+              },
+            }}
+          >
+            {cardUrl?.filter((item: any) => item._id !== cardOne._id).map((item: any) => (
+              <SwiperSlide key={item._id} className="relative group w-full cursor-pointer">
+                <div className="overflow-hidden shadow-lg relative transform transition-all duration-500 ease-in-out group-hover:shadow-2xl h-[250px]">
+                  <Link href={`/catalog/card/${item.url}`}>
+                    <div className="relative w-full h-full">
+                      {item?.images && (
+                        <Image
+                          src={`${baseUrl}/${item?.images[0]}`}
+                          fill
+                          priority
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                          alt="Home"
+                          className="object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
+                        />
+                      )}
+                    </div>
+                  </Link>
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
+        }
+      
     </>
   );
 }

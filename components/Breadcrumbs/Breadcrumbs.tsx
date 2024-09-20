@@ -8,22 +8,22 @@ export default function Breadcrumbs({ bread }: any) {
 
   return (
     <nav aria-label="breadcrumb">
-      <ol className="flex">
-        <li className="mr-2">
+      <ol className="flex flex-wrap text-sm">
+        <li className="mr-2 max-md:mr-1 scroll-snap-start">
           <Link href={bread.mainUrl} className="text-gray-500 hover:text-gray-900">
             {bread.main}
           </Link>
         </li>
-        <li className="mr-2">/</li>
-        <li className="mr-2">
+        <li className="mr-2 max-md:mr-1">/</li>
+        <li className="mr-2 max-md:mr-1 scroll-snap-start">
           <Link href={`${bread.catalogMainUrl}`} className="text-gray-500 hover:text-gray-900">
             {bread.catalogMain}
           </Link>
         </li>
         {bread.catalog && bread.catalogUrl && (
           <>
-            <li className="mr-2">/</li>
-            <li className="mr-2">
+            <li className="mr-2 max-md:mr-1">/</li>
+            <li className="mr-2 max-md:mr-1 scroll-snap-start">
               <Link href={bread.catalogUrl} className="text-gray-500 hover:text-gray-900">
                 {bread.catalog}
               </Link>
@@ -32,8 +32,8 @@ export default function Breadcrumbs({ bread }: any) {
         )}
         {bread.category && bread.categoryUrl && (
           <>
-            <li className="mr-2">/</li>
-            <li className="mr-2">
+            <li className="mr-2 max-md:mr-1">/</li>
+            <li className="mr-2 max-md:mr-1 scroll-snap-start">
               <Link href={bread.categoryUrl} className="text-gray-500 hover:text-gray-900">
                 {bread.category}
               </Link>
@@ -42,8 +42,8 @@ export default function Breadcrumbs({ bread }: any) {
         )}
         {bread.itemName && (
           <>
-            <li className="mr-2">/</li>
-            <li className="text-gray-700">{bread.itemName}</li>
+            <li className="mr-2 max-md:mr-1">/</li>
+            <li className="text-gray-700 scroll-snap-start">{bread.itemName}</li>
           </>
         )}
       </ol>

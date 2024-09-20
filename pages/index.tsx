@@ -16,6 +16,8 @@ export default function Home() {
   const lang = useAppSelector((state) => state.ui.ui);
   const { catalogAll, subCatalogAll, cardArr } = useAppSelector((state: any) => state.catalog);
 
+  const [isMounted, setIsMounted] = useState(false);
+
   const openFullscreen = (image: any) => {
     dispatch(fullImageshow({ show: true, image: image }));
   };
@@ -31,8 +33,13 @@ export default function Home() {
   }
 
   useEffect(() => {
+    setIsMounted(true);
     dispatch(getCardAll());
   }, [dispatch]);
+
+  if (!isMounted) {
+    return null;
+  }
 
   return (
     <section className='home container'>
@@ -43,11 +50,11 @@ export default function Home() {
           url={'http://localhost:3000/'}
         />
         {/* First block */}
-        <div className="home-group-1 grid grid-cols-2 grid-rows-2 gap-5">
+        <div className="home-group-1 grid grid-cols-2 grid-rows-2 gap-5 max-md:grid-cols-1">
           {
             catalogAll && catalogAll?.map(( item: any ) => (
             <Link key={item.id || item._id} href={`catalog/${item.url}`}  onClick={() => handleLSCatalogName(item)} className='relative group'>
-              <div className='overflow-hidden shadow-lg relative transform transition-all duration-500 ease-in-out group-hover:shadow-2xl h-[300px] w-full'>
+              <div className='overflow-hidden relative transform transition-all duration-500 ease-in-out  h-[300px] w-full max-md:h-[200px]'>
                 {
                   item.image &&       
                   <Image
@@ -60,8 +67,8 @@ export default function Home() {
                   />
                 }
                 <div className='group__box-shadow'></div>
-                <div className='absolute bottom-8 flex justify-center w-full text-white h4-size z-2'>
-                  <h4 className='max-w-96 text-center'>{ lang === "RU" ? item?.catalog : item?.catalogMD }</h4>
+                <div className='absolute bottom-8 flex justify-center w-full z-2 max-md:bottom-4'>
+                  <h4 className='max-w-96 text-center text-xl font-bold text-white text-uppercase max-md:text-lg '>{ lang === "RU" ? item?.catalog : item?.catalogMD }</h4>
                 </div>
               </div>
             </Link>
@@ -79,11 +86,11 @@ export default function Home() {
             />
 
             {/* rotang */}
-              <div className='flex w-full gap-5'>
+              <div className='home-group-2 flex w-full gap-5 max-md:flex-wrap max-md:flex-row text-center'>
               {
               catalogAll && catalogAll[0]?.items?.slice(0, 4).map(( item: any ) => (
                 <Link key={item.url || item.name} href={`catalog/${item.url}`} onClick={() => handleLSCatalogName(item)} className='relative group w-full'>
-                  <div className='overflow-hidden shadow-lg relative transform transition-all duration-500 ease-in-out group-hover:shadow-2xl h-[200px]'>
+                  <div className='overflow-hidden relative transform transition-all duration-500 ease-in-out  h-[200px]'>
                     {
                       item?.image &&       
                       <Image
@@ -96,8 +103,8 @@ export default function Home() {
                       />
                     }
                     <div className='group__box-shadow'></div>
-                    <div className='absolute bottom-4 flex justify-center w-full text-base font-bold text-white z-2'>
-                      <h4 className='text-lg'>{ lang === "RU" ? item?.name : item?.nameMD }</h4>
+                    <div className='absolute bottom-4 flex justify-center w-full  z-2'>
+                      <h4 className='text-lg font-bold text-white'>{ lang === "RU" ? item?.name : item?.nameMD }</h4>
                     </div>
                   </div>
                 </Link>
@@ -119,11 +126,11 @@ export default function Home() {
             />
 
               {/* rotang */}
-              <div className='flex w-full gap-5'>
+              <div className='home-group-3 flex w-full gap-5 max-md:flex-wrap'>
               {
                 catalogAll && catalogAll[1]?.items?.slice(0, 3).map(( item: any ) => (
                 <Link key={item.url || item.name}  onClick={() => handleLSCatalogName(item)} href={`catalog/${item.url}`} className='relative group w-full'>
-                  <div className='overflow-hidden shadow-lg relative transform transition-all duration-500 ease-in-out group-hover:shadow-2xl h-[250px]'>
+                  <div className='overflow-hidden relative transform transition-all duration-500 ease-in-out  h-[250px] max-md:h-[200px]'>
                     {
                       item?.image &&       
                       <Image
@@ -136,8 +143,8 @@ export default function Home() {
                       />
                     }
                     <div className='group__box-shadow'></div>
-                    <div className='absolute bottom-4 flex justify-center w-full text-base font-bold text-white z-2'>
-                      <h4 className='text-lg'>{ lang === "RU" ? item?.name : item?.nameMD }</h4>
+                    <div className='absolute bottom-4 flex justify-center w-full z-2'>
+                      <h4 className='text-lg font-bold text-white'>{ lang === "RU" ? item?.name : item?.nameMD }</h4>
                     </div>
                   </div>
                 </Link>
@@ -158,17 +165,23 @@ export default function Home() {
       <Swiper
         modules={[Navigation, Pagination, Scrollbar, A11y]}
         spaceBetween={10}
-        slidesPerView={2}
+        slidesPerView={1}
         navigation
         onSwiper={(swiper) => console.log(swiper)}
         onSlideChange={() => console.log('slide change')}
         className='swiper-home'
+        breakpoints={{
+          768: {
+            slidesPerView: 2,
+            spaceBetween: 30
+          },
+        }}
       >
         {
           cardArr && cardArr.map((item: any) => (
             <SwiperSlide key={item.id || item._id} className='relative group w-full cursor-pointer'>
               <div 
-                className='overflow-hidden shadow-lg relative transform transition-all duration-500 ease-in-out group-hover:shadow-2xl h-[400px]'
+                className='overflow-hidden relative transform transition-all duration-500 ease-in-out  h-[400px] max-md:h-[250px] max-sm:h-[200px]'
                 onClick={() => openFullscreen(item.images[0])}
               >
                   <Image
@@ -191,9 +204,9 @@ export default function Home() {
 
 export const Title = ( { lang, textRU, textRO }: any ) => {
   return (
-    <div className="relative my-5 flex items-center justify-center">
+    <div className="title-home relative my-5 flex items-center justify-center ">
       <span className="absolute inset-x-0 bottom-1/2 h-[1px] bg-gray-300 "></span>
-      <h4 className="text-center relative z-10 pb-2 h4-size bg-white px-4"> { lang === "RU" ? textRU : textRO } </h4>
+      <h4 className="text-center relative z-10  text-lg font-bold bg-white px-4 max-md:text-base"> { lang === "RU" ? textRU : textRO } </h4>
     </div>
   )
 }
