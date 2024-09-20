@@ -20,7 +20,6 @@ export default function Catalog({ lang, cardUrl }: any) {
 
     if (typeof url === 'string') {
       const response = dispatch(getCardQueryUrl({ url }));
-      console.log(response);
       
     }
   }, [router.query.url]);

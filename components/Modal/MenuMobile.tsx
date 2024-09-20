@@ -33,12 +33,11 @@ export default function MenuMobile() {
   };
 
   useEffect(() => {
+    dispatch(showMobileMenu(false));
     if (router.pathname !== "/catalog/[url]") {
       setIsShowLink(false);
     }
   }, [router]);
-
-  console.log(router.query.url);
 
   return (
     <Offcanvas
@@ -63,23 +62,26 @@ export default function MenuMobile() {
               </Link>
             </li>
             <li
-              className={`w-full relative  ${isActive(
+              className={`w-full relative flex flex-row  ${isActive(
                 "/catalog/[url]"
               )} border`}
               onClick={handleShowLink}
             >
-              <Link
-                className="w-full mx-3 my-2  flex items-center justify-between"
-                href={`/catalog/catalog`}
-              >
-                {lang === "RU" ? "Каталог" : "Catalog"}
-                <span className="absolute top-0 right-0 w-10 h-full flex justify-center items-center">
+              <div>
+                <Link
+                  className="w-full px-3 py-2 relative flex items-center justify-between"
+                  href={`/catalog/catalog`}
+                >
+                  {lang === "RU" ? "Каталог" : "Catalog"}
+
+                </Link>                  
+                <span className="absolute top-0 right-0 w-14 h-full flex justify-center items-center bg-red-200">
                   <FontAwesomeIcon
                     icon={faChevronDown}
                     className={`w-3 ml-1 ${isShowLink && "-rotate-90"}`}
                   />
                 </span>
-              </Link>
+              </div>
             </li>
             <div
               className={`catalog-links ml-8 ${

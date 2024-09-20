@@ -77,6 +77,7 @@ export default function ProductCard() {
           title={urlBread?.itemName}
           description={lang === 'RU' ? cardOne.description : cardOne.descriptionRO}
           url={`http://localhost:3000/catalog/card/${router.query.url}`}
+          type={'product'}
         />
         {/* SEO */}
         <Margin />

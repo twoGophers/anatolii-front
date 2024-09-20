@@ -48,6 +48,7 @@ export default function Home() {
           title={'SUNYARD'}
           description={'Мебель на заказ'}
           url={'http://localhost:3000/'}
+          website={'website'}
         />
         {/* First block */}
         <div className="home-group-1 grid grid-cols-2 grid-rows-2 gap-5 max-md:grid-cols-1">

@@ -31,31 +31,38 @@ if (!isLangLoaded) {
 }
 
 
-  return (
-    <div className='container'>
-      {/* CEO */}
-        <HeadComponent
-          title={'НАШИ РАБОТЫ'}
-          description={'Мебель на заказ'}
-          url={'http://localhost:3000/galereiia'}
-        />
-        {/* CEO */}
+return (
+  <div className='gallery container'>
+    {/* SEO */}
+    <HeadComponent
+      title={'НАШИ РАБОТЫ'}
+      description={'Мебель на заказ'}
+      url={'http://localhost:3000/galereiia'}
+    />
+    {/* SEO */}
 
-      <h4 className='h4-size text-center'>{lang === "RU" ? 'наши работы' : 'lucrările noastre'}</h4>
-      <div className='mt-4 grid grid-cols-4 gap-10'>
-        { images && images?.map((image: any, index: any) => (
-          <div key={index} className="relative w-full h-64 cursor-pointer" onClick={() => openFullscreen(index)}>
-            <Image
-              src={`${baseUrl}/${image}`}
-              alt={altText}
-              priority
-              fill
-              className='rounded-md object-cover center transition-transform duration-300 hover:scale-105'
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            />
-          </div>
-        ))}
-      </div>
+    <h4 className='gallery__title text-lg md:text-xl font-bold text-center text-uppercase '>
+      {lang === "RU" ? 'наши работы' : 'lucrările noastre'}
+    </h4>
+
+    <div className='gallery__list mt-4 grid lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-2  w-full gap-10 md:gap-5 sm:gap-5'>
+      { images && images?.map((image: any, index: any) => (
+        <div 
+          key={index} 
+          className="gallery__item relative cursor-pointer " 
+          onClick={() => openFullscreen(index)}
+        >
+          <Image
+            src={`${baseUrl}/${image}`}
+            alt={altText}
+            priority
+            fill
+            className='gallery__image rounded-md object-cover center transition-transform duration-300 hover:scale-105'
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
+        </div>
+      ))}
     </div>
-  );
+  </div>
+);
 }

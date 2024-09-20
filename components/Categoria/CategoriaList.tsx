@@ -86,6 +86,9 @@ export default function CategoryList() {
     return null;
   }
 
+  console.log(urlBread);
+  
+
   return (
     <section>
       {/* CEO */}
@@ -93,11 +96,12 @@ export default function CategoryList() {
         title={`${urlBread?.catalog}`}
         description={`${urlBread?.catalogUrl}`}
         url={`http://localhost:3000/catalog/${router.query.url}`}
+        website={'product'}
       />
       {/* CEO */}
       <div className='flex w-full justify-between text-sm'>
         <Breadcrumbs bread={urlBread} />
-        <div className="filter flex flex-row gap-x-10">
+        <div className="filter flex flex-row gap-x-10 items-start">
           <div className='flex flex-row gap-x-4 max-lg:hidden'>
             <span
               className='cursor-pointer'

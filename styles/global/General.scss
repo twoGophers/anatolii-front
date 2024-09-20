@@ -36,6 +36,11 @@ hr {
     }
 }
 
+.gallery {
+    &__item {
+        min-height: 180px;
+    }
+}
 
 @media screen and (max-width: 768px) {
     .home-group-1 {
