@@ -3,7 +3,7 @@ import HeadComponent from '@/components/Head/Head';
 import { useAppSelector } from '@/store/hooks';
 
 
-export default function Companii() {
+export default function Compania() {
   const lang = useAppSelector((state) => state.ui.ui);
 
 
