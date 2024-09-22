@@ -1,10 +1,10 @@
 import React from 'react';
 import { YMaps, Map, Placemark } from '@pbe/react-yandex-maps';
 import HeadComponent from '@/components/Head/Head';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { useAppSelector } from '@/store/hooks';
 import Link from 'next/link';
 
-export default function compania() {
+export default function Contacti() {
 
   const center = [47.024512, 28.832159];
   const zoom = 9;

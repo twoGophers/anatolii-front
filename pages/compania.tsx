@@ -1,6 +1,6 @@
 import React from 'react';
 import HeadComponent from '@/components/Head/Head';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { useAppSelector } from '@/store/hooks';
 
 
 export default function Companii() {
