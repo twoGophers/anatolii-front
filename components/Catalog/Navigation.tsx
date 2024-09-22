@@ -8,11 +8,17 @@ import { useRouter } from "next/router";
 import { showMobileMenuLink } from "@/store/slices/ui";
 
 export default function Navigation() {
+  
   const catalogAll = useAppSelector((state) => state.catalog.catalogAll as Catalog[]);
+  const cardAll = useAppSelector((state) => state.catalog.cardArr);
   const lang = useAppSelector((state) => state.ui.ui);
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
+
   const router = useRouter();
   const dispatch = useAppDispatch();
+
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [ catalogOfCard, setCatalogOfCard ] = useState<any>([]);
+  const [ subCatalogOfCard, setSubCatalogOfCard ] = useState<any>([]);
 
   const handleToggle = (index: number, item: any) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -44,10 +50,22 @@ export default function Navigation() {
     });
   }, [router.query.url, catalogAll]);
 
+  useEffect(() => {
+    if(cardAll && catalogAll) {
+      let catalogOfCard = cardAll.map(( item: any )=> item.urlCatalog);
+      let subCatalogOfCard = cardAll.map(( item: any )=> item.urlSubCatalog);
+      
+      setCatalogOfCard(catalogOfCard);
+      setSubCatalogOfCard(subCatalogOfCard);
+      
+    }
+  }, [cardAll, catalogAll]);
+  
+
   return (
     <div>
       <ul className="text-[#727272]">
-        {catalogAll.map((item, index) => (
+        {catalogAll.filter((item) => catalogOfCard.includes(item.url)).map((item, index) => (
           <li key={index} className="border-gray-300">
             <div
               className="flex justify-between items-start py-2 cursor-pointer relative"
@@ -79,8 +97,9 @@ export default function Navigation() {
             >
               {item.items && (
                 <ul className="pl-4">
-                  {item.items.map((subItem: any) => (
+                  {item?.items.filter((item) => subCatalogOfCard.includes(item.url)).map((subItem: any) => (
                     <li
+                      onClick={() => handleToggleSub(subItem)}
                       key={subItem.url}
                       className={`text-base py-1 ${
                         subItem.url === router.query.url ? "text-black font-semibold" : ""

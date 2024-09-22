@@ -34,7 +34,7 @@ export default function Home() {
 
   useEffect(() => {
     setIsMounted(true);
-    dispatch(getCardAll());
+    // dispatch(getCardAll());
   }, [dispatch]);
 
   if (!isMounted) {
