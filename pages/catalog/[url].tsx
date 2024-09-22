@@ -1,9 +1,16 @@
 import CategoriaList from '@/components/Categoria/CategoriaList';
 import CategoriaNav from '@/components/Categoria/CategoriaNav';
-import React from 'react';
+import React, { useEffect } from 'react';
 import MarginTop from '@/components/Untils/Margin';
+import { useAppDispatch } from '@/store/hooks';
+import { getCardAll } from '@/store/slices/catalog';
 
 export default function Catalog() {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(getCardAll());
+  }, []);
 
   return (
     <div className='container'>

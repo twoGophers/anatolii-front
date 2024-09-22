@@ -19,7 +19,7 @@ export default function Catalog({ lang, cardUrl }: any) {
     const url = Array.isArray(router.query.url) ? router.query.url[0] : router.query.url;
 
     if (typeof url === 'string') {
-      const response = dispatch(getCardQueryUrl({ url }));
+      dispatch(getCardQueryUrl({ url }));
       
     }
   }, [router.query.url]);
@@ -52,7 +52,7 @@ export default function Catalog({ lang, cardUrl }: any) {
   if (!cardUrl) {
     return (
       <div className='text-xl font-semibold text-center mt-24'>
-        Нет карточек
+        { lang === "RU" ? 'Нет карточек' : 'Fără carduri'} 
       </div>
     );
   }

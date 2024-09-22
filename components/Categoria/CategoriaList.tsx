@@ -86,9 +86,6 @@ export default function CategoryList() {
     return null;
   }
 
-  console.log(urlBread);
-  
-
   return (
     <section>
       {/* CEO */}

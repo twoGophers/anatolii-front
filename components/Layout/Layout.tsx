@@ -3,7 +3,7 @@ import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import FullscreenSlider from '@/components/Modal/FullscreenSlider';
-import { getCardAll, getCatalogItems } from '@/store/slices/catalog';
+import { getCatalogItems } from '@/store/slices/catalog';
 import FullImage from "../Modal/FullImage";
 import MenuMobile from "../Modal/MenuMobile";
 import MobileCatalog from "../Modal/MobileCatalog";
