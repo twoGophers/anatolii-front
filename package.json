@@ -17,6 +17,7 @@
     "draft-js": "^0.11.7",
     "draftjs-to-html": "^0.9.1",
     "google-map-react": "^2.2.1",
+    "gsap": "^3.12.5",
     "next": "^14.2.5",
     "react": "^18",
     "react-bootstrap": "^2.10.4",
@@ -26,7 +27,8 @@
     "react-router-dom": "^6.26.1",
     "sass": "^1.77.8",
     "sharp": "^0.33.5",
-    "swiper": "^11.1.9"
+    "swiper": "^11.1.9",
+    "three": "^0.168.0"
   },
   "devDependencies": {
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
@@ -37,6 +39,7 @@
     "@types/react": "^18.3.4",
     "@types/react-dom": "^18",
     "@types/react-draft-wysiwyg": "^1.13.8",
+    "@types/three": "^0.168.0",
     "eslint": "^8",
     "eslint-config-next": "14.2.5",
     "install": "^0.13.0",
