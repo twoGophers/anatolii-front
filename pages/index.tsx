@@ -155,49 +155,54 @@ export default function Home() {
           </>
         }
 
-
-        {/* Second block */}
-        <Title 
-          lang={lang}
-          textRU={"КАТАЛОГ"}
-          textRO={"CATALOG"}
-        />
-
-      <Swiper
-        modules={[Navigation, Pagination, Scrollbar, A11y]}
-        spaceBetween={10}
-        slidesPerView={1}
-        navigation
-        onSwiper={(swiper) => console.log(swiper)}
-        onSlideChange={() => console.log('slide change')}
-        className='swiper-home'
-        breakpoints={{
-          768: {
-            slidesPerView: 2,
-            spaceBetween: 30
-          },
-        }}
-      >
         {
-          cardArr && cardArr.map((item: any) => (
-            <SwiperSlide key={item.id || item._id} className='relative group w-full cursor-pointer'>
-              <div 
-                className='overflow-hidden relative transform transition-all duration-500 ease-in-out  h-[400px] max-md:h-[250px] max-sm:h-[200px]'
-                onClick={() => openFullscreen(item.images[0])}
+          catalogAll &&
+          <>
+                  {/* Second block */}
+                <Title 
+                  lang={lang}
+                  textRU={"КАТАЛОГ"}
+                  textRO={"CATALOG"}
+                />
+
+              <Swiper
+                modules={[Navigation, Pagination, Scrollbar, A11y]}
+                spaceBetween={10}
+                slidesPerView={1}
+                navigation
+                onSwiper={(swiper) => console.log(swiper)}
+                onSlideChange={() => console.log('slide change')}
+                className='swiper-home'
+                breakpoints={{
+                  768: {
+                    slidesPerView: 2,
+                    spaceBetween: 30
+                  },
+                }}
               >
-                  <Image
-                    src={`${baseUrl}/${item.images[0]}`}
-                    fill
-                    priority
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    alt="Home"
-                    className='object-cover transition-transform duration-500 ease-in-out group-hover:scale-110'
-                  />
-              </div>
-            </SwiperSlide>
-          ))
+                {
+                  cardArr && cardArr.map((item: any) => (
+                    <SwiperSlide key={item.id || item._id} className='relative group w-full cursor-pointer'>
+                      <div 
+                        className='overflow-hidden relative transform transition-all duration-500 ease-in-out  h-[400px] max-md:h-[250px] max-sm:h-[200px]'
+                        onClick={() => openFullscreen(item.images[0])}
+                      >
+                          <Image
+                            src={`${baseUrl}/${item.images[0]}`}
+                            fill
+                            priority
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                            alt="Home"
+                            className='object-cover transition-transform duration-500 ease-in-out group-hover:scale-110'
+                          />
+                      </div>
+                    </SwiperSlide>
+                  ))
+                }
+              </Swiper>
+          </>
         }
-      </Swiper>
+
 
     </section>
   );
