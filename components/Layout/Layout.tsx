@@ -36,50 +36,53 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     });
   }, [dispatch]);
 
-  if (isLoading) {
-    return (
-      <div className="h-screen w-full flex justify-center items-center">
-        <Image src={Preloader} alt="Loading..." width={50} height={50} />
-      </div>
-    );
-  }
-
   return (
-    <div className="flex flex-col min-h-screen bg-white">
-      <div className={`container-animation ${animationClass} flex-grow max-md:mt-4`}>
-        <div className="container">
-          <Header />
+    <>
+      {
+        isLoading 
+        ?
+        <div className="h-screen w-full flex justify-center items-center">
+          <Image src={Preloader} alt="Loading..." width={50} height={50} />
         </div>
-        <div className="flex-grow mb-10 md:mb-24 mt-4 md:mt-5">
-          {children}
+        :
+        <div className="flex flex-col min-h-screen bg-white">
+          <div className={`container-animation ${animationClass} flex-grow max-md:mt-4`}>
+            <div className="container">
+              <Header />
+            </div>
+            <div className="flex-grow mb-10 md:mb-24 mt-4 md:mt-5">
+              {children}
+            </div>
+          </div>
+          <div className="container">
+            <Footer />
+          </div>
+
+          {/* Conditional rendering for fullscreen slider modal */}
+          {modalFull.show && (
+            <FullscreenSlider 
+              images={modalFull.images} 
+              isFullscreen={modalFull.show} 
+              activeSlideIndex={modalFull.index} 
+            />
+          )}
+
+          {/* Conditional rendering for full image modal */}
+          {modalFullImage.show && (
+            <FullImage 
+              show={modalFullImage.show} 
+              image={modalFullImage.image} 
+            />
+          )}
+
+          {/* <ThreeSphere /> */}
+
+          {/* Additional mobile menus */}
+          <MenuMobile />
+          <MobileCatalog />
         </div>
-      </div>
-      <div className="container">
-        <Footer />
-      </div>
-
-      {/* Conditional rendering for fullscreen slider modal */}
-      {modalFull.show && (
-        <FullscreenSlider 
-          images={modalFull.images} 
-          isFullscreen={modalFull.show} 
-          activeSlideIndex={modalFull.index} 
-        />
-      )}
-
-      {/* Conditional rendering for full image modal */}
-      {modalFullImage.show && (
-        <FullImage 
-          show={modalFullImage.show} 
-          image={modalFullImage.image} 
-        />
-      )}
-
-      {/* <ThreeSphere /> */}
-
-      {/* Additional mobile menus */}
-      <MenuMobile />
-      <MobileCatalog />
-    </div>
+      }
+    </>
+    
   );
 }
