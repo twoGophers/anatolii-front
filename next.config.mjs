@@ -10,7 +10,7 @@ const nextConfig = {
             },
             {
                 protocol: 'https',
-                hostname: 'anatolii-back.onrender.com',
+                hostname: 'forcestyle.space',
                 pathname: '/image/**',
             },
         ],
