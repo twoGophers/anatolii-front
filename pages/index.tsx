@@ -45,9 +45,9 @@ export default function Home() {
     <section className='home container'>
 
         <HeadComponent
-          title={'SUNYARD'}
+          title={'Force style'}
           description={'Мебель на заказ'}
-          url={'http://localhost:3000/'}
+          url={`${process.env.NEXT_PUBLIC_SERVER_URL}`}
           website={'website'}
         />
         {/* First block */}
@@ -156,7 +156,7 @@ export default function Home() {
         }
 
         {
-          catalogAll &&
+          catalogAll.length !== 0 &&
           <>
                   {/* Second block */}
                 <Title 
