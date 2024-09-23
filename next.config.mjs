@@ -10,7 +10,7 @@ const nextConfig = {
             },
             {
                 protocol: 'https',
-                hostname: 'forcestyle.space',
+                hostname: 'www.forcestyle.space',
                 pathname: '/image/**',
             },
         ],
