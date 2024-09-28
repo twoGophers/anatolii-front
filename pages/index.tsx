@@ -14,7 +14,8 @@ import { getCardAll } from '@/store/slices/catalog';
 export default function Home() {
   const dispatch = useAppDispatch();
   const lang = useAppSelector((state) => state.ui.ui);
-  const { catalogAll, subCatalogAll, cardArr } = useAppSelector((state: any) => state.catalog);
+  const catalog = useAppSelector((state: any) => state.catalog);
+  const { catalogAll, cardArr } = catalog;
 
   const [isMounted, setIsMounted] = useState(false);
 
