@@ -10,6 +10,7 @@ import Image from 'next/image';
 import Preloader from "@/public/5.gif";
 import { getCatalogItems } from '@/store/slices/catalog';
 import ThreeSphere from "../Untils/ThreeSphere";
+import SmokeEffect from "../Untils/SmokeEffect";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const dispatch = useAppDispatch();
@@ -45,7 +46,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <Image src={Preloader} alt="Loading..." width={50} height={50} />
         </div>
         :
-        <div className="flex flex-col min-h-screen bg-white">
+        <div className="flex flex-col min-h-screen">
+          <SmokeEffect backgroundColor="white" />
           <div className={`container-animation ${animationClass} flex-grow max-md:mt-4`}>
             <div className="container">
               <Header />
