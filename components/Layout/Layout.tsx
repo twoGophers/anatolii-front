@@ -16,8 +16,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const dispatch = useAppDispatch();
   
   const lang = useAppSelector((state) => state.ui.ui);
-  const modalFull = useAppSelector((state) => state.ui.modalFull);
-  const modalFullImage = useAppSelector((state) => state.ui.modalFullImage);
+  const { modalFull, modalFullImage, bgColor } = useAppSelector((state) => state.ui);
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [animationClass, setAnimationClass] = useState<string>('');
@@ -46,7 +45,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <Image src={Preloader} alt="Loading..." width={50} height={50} />
         </div>
         :
-        <div className="flex flex-col min-h-screen">
+        <div className={`flex flex-col min-h-screen color-transition ${bgColor ? 'bg-white' : 'bg-[#121212]'}`}>
           <SmokeEffect backgroundColor="white" />
           <div className={`container-animation ${animationClass} flex-grow max-md:mt-4`}>
             <div className="container">

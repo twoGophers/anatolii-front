@@ -16,7 +16,7 @@ export default function Home() {
   const lang = useAppSelector((state) => state.ui.ui);
   const catalog = useAppSelector((state: any) => state.catalog);
   const { catalogAll, cardArr } = catalog;
-
+  const { bgColor } = useAppSelector((state) => state.ui);
   const [isMounted, setIsMounted] = useState(false);
 
   const openFullscreen = (image: any) => {
@@ -70,7 +70,7 @@ export default function Home() {
                 }
                 <div className='group__box-shadow'></div>
                 <div className='absolute bottom-8 flex justify-center w-full z-2 max-md:bottom-4'>
-                  <h4 className='max-w-96 text-center text-xl font-bold text-white text-uppercase max-md:text-lg '>{ lang === "RU" ? item?.catalog : item?.catalogMD }</h4>
+                  <h4 className={`${bgColor ? ' text-white' : 'text-[#D1D1D1]'} color-transition max-w-96 text-center text-xl font-bold text-uppercase max-md:text-lg  `}>{ lang === "RU" ? item?.catalog : item?.catalogMD }</h4>
                 </div>
               </div>
             </Link>
@@ -106,7 +106,7 @@ export default function Home() {
                     }
                     <div className='group__box-shadow'></div>
                     <div className='absolute bottom-4 flex justify-center w-full  z-2'>
-                      <h4 className='text-lg font-bold text-white'>{ lang === "RU" ? item?.name : item?.nameMD }</h4>
+                      <h4 className={`${bgColor ? ' text-white' : 'text-[#D1D1D1]'} text-lg font-bold color-transition`}>{ lang === "RU" ? item?.name : item?.nameMD }</h4>
                     </div>
                   </div>
                 </Link>
@@ -146,7 +146,7 @@ export default function Home() {
                     }
                     <div className='group__box-shadow'></div>
                     <div className='absolute bottom-4 flex justify-center w-full z-2'>
-                      <h4 className='text-lg font-bold text-white'>{ lang === "RU" ? item?.name : item?.nameMD }</h4>
+                      <h4 className={`${bgColor ? ' text-white' : 'text-[#D1D1D1]'} text-lg font-bold color-transition`}>{ lang === "RU" ? item?.name : item?.nameMD }</h4>
                     </div>
                   </div>
                 </Link>
@@ -210,10 +210,11 @@ export default function Home() {
 }
 
 export const Title = ( { lang, textRU, textRO }: any ) => {
+  const { bgColor } = useAppSelector((state) => state.ui);
   return (
     <div className="title-home relative my-5 flex items-center justify-center ">
       <span className="absolute inset-x-0 bottom-1/2 h-[1px] bg-gray-300 "></span>
-      <h4 className="text-center relative z-10  text-lg font-bold bg-white px-4 max-md:text-base"> { lang === "RU" ? textRU : textRO } </h4>
+      <h4 className={`${bgColor ? 'bg-white text-[#333]' : 'bg-[#121212] text-[#D1D1D1]' } color-transition  text-center relative z-10  text-lg font-bold px-4 max-md:text-base ` }> { lang === "RU" ? textRU : textRO } </h4>
     </div>
   )
 }

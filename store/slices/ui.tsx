@@ -17,7 +17,8 @@ const initialState = {
   },
   showMobileMenuLink: {
     show: false
-  }
+  },
+  bgColor: true
 };
 
 const uiSlice = createSlice({
@@ -42,9 +43,12 @@ const uiSlice = createSlice({
     },
     showMobileMenuLink: (state, action) => {
       state.showMobileMenuLink.show = action.payload;
+    },
+    changeBgColor: (state, action) => {
+      state.bgColor = action.payload;
     }
   },
 });
 
-export const { updateLang, setModalFull, fullImageshow, changeIcon, showMobileMenu, showMobileMenuLink } = uiSlice.actions;
+export const { updateLang, setModalFull, fullImageshow, changeIcon, showMobileMenu, showMobileMenuLink, changeBgColor } = uiSlice.actions;
 export default uiSlice.reducer;

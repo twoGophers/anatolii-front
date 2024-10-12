@@ -1,22 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from 'next/router';
-import Image from "next/image";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPhone, faChevronDown } from "@fortawesome/free-solid-svg-icons";
-import Logo from "@/assets/logo.svg";
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { updateLang, showMobileMenu } from '@/store/slices/ui';
 import { useLang } from '@/hooks/useLang ';
 import { Catalog } from "@/typescript";
 import Lang from "../Lang/Lang";
+import ToggleSwitch from "./ToggleSwitch";
 
 export default function Header() {
   const { isLangLoaded } = useLang();
   const router = useRouter();
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
-
+  const { modalFull, modalFullImage, bgColor } = useAppSelector((state) => state.ui);
   const lang = useAppSelector((state) => state.ui.ui);
   const catalogAll = useAppSelector((state) => state.catalog.catalogAll as Catalog[]);
   const dispatch = useAppDispatch();
@@ -45,11 +44,15 @@ export default function Header() {
   }
 
   return (
-    <header className="flex flex-row justify-between items-center">
+    <header className={` flex flex-row justify-between items-center relative ${bgColor ? 'text-[#333]' : 'text-[#D1D1D1]'}`}>
       <div onClick={handleShowMobileMenu} className="md:hidden burger-container group w-6 h-4 flex flex-col justify-between items-start cursor-pointer">
         <span className="block w-full h-0.5 bg-black origin-left transition-all duration-300 group-hover:w-1/2 group-hover:bg-gray-400"></span>
         <span className="block w-full h-0.5 bg-black transition-all duration-300 group-hover:bg-gray-400"></span>
         <span className="block w-full h-0.5 bg-black origin-left transition-all duration-300 group-hover:w-1/2 group-hover:bg-gray-400"></span>
+      </div>
+      {/* Toogle thema */}
+      <div className="absolute  right-0 hidden md:block md:-bottom-3 lg:top-2 ">
+        <ToggleSwitch />
       </div>
 
       <div className="flex flex-row items-center gap-9 columns-3">
@@ -94,7 +97,7 @@ export default function Header() {
             <span className="max-md:hidden">+37367346700</span>
         </Link>
         <div className="lg:items-end max-md:hidden max-lg:gap-2 max-lg:mt-3 max-md:mt-0 max-md:gap-0 max-md:hidden justify-end nav flex items-center text-sm font-semibold gap-10">
-          <ul className="text-[#333] flex gap-x-5 flex-wrap list-none">
+          <ul className={`flex gap-x-5 flex-wrap list-none`}>
             <li className={`${isActive('/')} max-md:my-2`}>
               <Link href={"/"}>
                 <span className="after-line uppercase">
