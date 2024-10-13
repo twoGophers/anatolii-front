@@ -12,6 +12,7 @@ export default function Galerieiia() {
   const lang = useAppSelector((state) => state.ui.ui);
   const { cardArr } = useAppSelector((state) => state.catalog);
   const { isLangLoaded } = useLang();
+  const { bgColor } = useAppSelector((state) => state.ui);
 
   const altText = lang === "RU" ? 'Фото работы' : 'Fotografii lucrărilor';
 
@@ -41,7 +42,7 @@ return (
     />
     {/* SEO */}
 
-    <h4 className='gallery__title text-lg md:text-xl font-bold text-center text-uppercase '>
+    <h4 className={`${bgColor ? 'text-[#333]' : 'text-[#D1D1D1]' } gallery__title text-lg md:text-xl font-bold text-center text-uppercase `} >
       {lang === "RU" ? 'наши работы' : 'lucrările noastre'}
     </h4>
 

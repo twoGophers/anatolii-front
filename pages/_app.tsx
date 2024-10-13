@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { store } from '@/store/store';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../styles/global/Imports.scss';
+import SmokeEffect from '@/components/Untils/SmokeEffect';
 
 export default function App({ Component, pageProps }: AppProps) {
   return (

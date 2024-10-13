@@ -10,13 +10,13 @@ import Image from 'next/image';
 import Preloader from "@/public/5.gif";
 import { getCatalogItems } from '@/store/slices/catalog';
 import ThreeSphere from "../Untils/ThreeSphere";
+import SmokeEffect from "../Untils/SmokeEffect";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const dispatch = useAppDispatch();
   
   const lang = useAppSelector((state) => state.ui.ui);
-  const modalFull = useAppSelector((state) => state.ui.modalFull);
-  const modalFullImage = useAppSelector((state) => state.ui.modalFullImage);
+  const { modalFull, modalFullImage, bgColor } = useAppSelector((state) => state.ui);
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [animationClass, setAnimationClass] = useState<string>('');
@@ -45,9 +45,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <Image src={Preloader} alt="Loading..." width={50} height={50} />
         </div>
         :
-        <div className="flex flex-col min-h-screen bg-white">
+        <div className={`flex flex-col min-h-screen color-transition ${bgColor ? 'bg-white' : 'bg-[#121212]'}`}>
+          <SmokeEffect backgroundColor="white" />
           <div className={`container-animation ${animationClass} flex-grow max-md:mt-4`}>
-            <div className="container">
+            <div className={`${bgColor ? 'bg-white' : 'bg-[#121212]'}  color-transition container sticky top-0 z-1 `}>
               <Header />
             </div>
             <div className="flex-grow mb-10 md:mb-24 mt-4 md:mt-5">
