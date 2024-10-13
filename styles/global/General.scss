@@ -45,6 +45,12 @@ hr {
 .color-transition {
     transition: background-color 0.5s ease, color 0.5s ease;;
   }
+@media screen and (max-width: 1024px) {
+    .smoke-effect {
+        display: none;
+        background: red;
+    }
+}
 
 @media screen and (max-width: 768px) {
     .home-group-1 {
