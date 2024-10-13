@@ -12,6 +12,7 @@ export default function Navigation() {
   const catalogAll = useAppSelector((state) => state.catalog.catalogAll as Catalog[]);
   const cardAll = useAppSelector((state) => state.catalog.cardArr);
   const lang = useAppSelector((state) => state.ui.ui);
+  const { modalFull, modalFullImage, bgColor } = useAppSelector((state) => state.ui);
 
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -64,7 +65,7 @@ export default function Navigation() {
 
   return (
     <div>
-      <ul className="text-[#727272]">
+      <ul className={`${bgColor ? 'text-[#727272]' : 'text-[#D1D1D1]'} `}>
         {catalogAll.filter((item) => catalogOfCard.includes(item.url)).map((item, index) => (
           <li key={index} className="border-gray-300">
             <div
@@ -74,10 +75,15 @@ export default function Navigation() {
               <Link
                 href={`/catalog/${item.url}`}
                 onClick={() => dispatch(showMobileMenuLink(false))}
+                className="pr-5"
               >
                 <span
                   className={`text-base ${
-                    item.url === router.query.url ? "text-black font-semibold" : ""
+                    item.url === router.query.url 
+                      ? bgColor 
+                        ? 'text-black font-semibold' 
+                        : 'text-white font-semibold' 
+                      : ''
                   }`}
                 >
                   {lang === "RU" ? item.catalog : item.catalogMD}
@@ -102,7 +108,11 @@ export default function Navigation() {
                       onClick={() => handleToggleSub(subItem)}
                       key={subItem.url}
                       className={`text-base py-1 ${
-                        subItem.url === router.query.url ? "text-black font-semibold" : ""
+                        subItem.url === router.query.url 
+                          ? bgColor 
+                            ? 'text-black font-semibold' 
+                            : 'text-white font-semibold' 
+                          : ''
                       }`}
                     >
                       <Link

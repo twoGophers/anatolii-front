@@ -7,6 +7,7 @@ import Navigation from '../Catalog/Navigation';
 export default function CategoriaNav() {
   const { isLangLoaded } = useLang();
   const lang = useAppSelector((state) => state.ui.ui);
+  const { modalFull, modalFullImage, bgColor } = useAppSelector((state) => state.ui);
 
   if (!isLangLoaded) {
     return null;
@@ -14,7 +15,7 @@ export default function CategoriaNav() {
 
   return (
     <div>
-      <h5 className="text-[#2d2a2a] font-semibold text-lg uppercase">
+      <h5 className={`${bgColor ? 'text-[#333]' : 'text-[#D1D1D1]'} font-semibold text-lg uppercase `}>
         {lang === "RU" ? 'Категории товаров' : 'Categorii de produse'}
       </h5>
       <Navigation />

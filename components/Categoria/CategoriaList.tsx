@@ -25,7 +25,7 @@ export default function CategoryList() {
   const router = useRouter();
   const { isLangLoaded } = useLang();
   const lang = useAppSelector((state) => state.ui.ui);
-  const { icon } = useAppSelector((state) => state.ui);
+  const { icon, bgColor } = useAppSelector((state) => state.ui);
   const [urlBread, setUrlBread] = useState<URL | undefined>(undefined);
   const [catalogArr, setCatalogArr] = useState<any[]>([]);
 
@@ -127,7 +127,7 @@ export default function CategoryList() {
           </div> */}
           <select
             name="orderby"
-            className="orderby border-b-2 border-solid border-[#a6c4b1] cursor-pointer -mt-1 max-lg:hidden"
+            className={`${ bgColor ? 'text-[#333]' : 'text-[#D1D1D1] bg-gray-600' } orderby border-b-2 border-solid border-[#a6c4b1] cursor-pointer -mt-1 max-lg:hidden`}
             defaultValue="menu_order"
             onChange={handleChange}
           >
@@ -153,14 +153,14 @@ export default function CategoryList() {
         <div className='max-lg:flex lg:hidden w-full justify-between my-3'>
           <div>
             <div onClick={handleShowMobileMenu} className="lg:hidden burger-container group w-6 h-4 flex flex-col justify-between items-start cursor-pointer">
-              <span className="block w-full h-0.5 bg-black origin-left transition-all duration-300 group-hover:w-1/2 group-hover:bg-gray-400"></span>
-              <span className="block w-full h-0.5 bg-black transition-all duration-300 group-hover:bg-gray-400"></span>
-              <span className="block w-full h-0.5 bg-black origin-left transition-all duration-300 group-hover:w-1/2 group-hover:bg-gray-400"></span>
+              <span className={`${bgColor ? 'bg-black' : 'bg-[#d1d1d1]'} block w-full h-0.5 origin-left transition-all duration-300 group-hover:w-1/2 group-hover:bg-gray-400`}></span>
+              <span className={`${bgColor ? 'bg-black' : 'bg-[#d1d1d1]'} block w-full h-0.5 transition-all duration-300 group-hover:bg-gray-400`}></span>
+              <span className={`${bgColor ? 'bg-black' : 'bg-[#d1d1d1]'} block w-full h-0.5 origin-left transition-all duration-300 group-hover:w-1/2 group-hover:bg-gray-400`}></span>
             </div>
           </div>
           <select
             name="orderby"
-            className="orderby border-b-2 border-solid border-[#a6c4b1] cursor-pointer -mt-1"
+            className={`${ bgColor ? 'text-[#333]' : 'text-[#D1D1D1] bg-gray-600' } orderby border-b-2 border-solid border-[#a6c4b1] cursor-pointer -mt-1 `}
             defaultValue="menu_order"
             onChange={handleChange}
           >

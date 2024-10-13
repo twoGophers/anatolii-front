@@ -32,6 +32,7 @@ export default function ProductCard() {
   const [urlBread, setUrlBread] = useState<URL | undefined>(undefined);
   const [thumbsSwiper, setThumbsSwiper] = useState<any | null>(null);
   const { cardOne, cardUrl } = useAppSelector((state) => state.catalog);
+  const { bgColor } = useAppSelector((state) => state.ui);
 
   useEffect(() => {
     const url = Array.isArray(router.query.url) ? router.query.url[0] : router.query.url;
@@ -148,16 +149,16 @@ export default function ProductCard() {
             </div>
           </div>
           <div className="w-full md:w-1/2 flex flex-col content-between">
-            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold">{lang === 'RU' ? cardOne.name : cardOne.nameMD}</h1>
+            <h1 className={`${bgColor ? 'text-[#333]' : 'text-[#D1D1D1]' } text-xl sm:text-2xl lg:text-3xl font-bold`}>{lang === 'RU' ? cardOne.name : cardOne.nameMD}</h1>
             <p className="text-[#a6c4b1] text-2xl max-lg:text-xl font-medium mt-2">
               {new Intl.NumberFormat('ro-RO', { style: 'currency', currency: 'MDL' }).format(cardOne.price)}
             </p>
-            <div className="description-card my-2">
+            <div className={`${bgColor ? 'text-[#333]' : 'text-[#D1D1D1]' } description-card my-2`}>
               <div dangerouslySetInnerHTML={{ __html: lang === 'RU' ? cardOne.description : cardOne.descriptionRO }} />
             </div>
             <hr />
             <p className='mt-2'>
-              <span className="font-semibold">{lang === 'RU' ? 'Категории: ' : 'Categorii: '}</span>
+              <span className={`${bgColor ? 'text-[#333]' : 'text-[#D1D1D1]' } font-semibold`}>{lang === 'RU' ? 'Категории: ' : 'Categorii: '}</span>
               <Link className="text-gray-500" href={`/catalog/${cardOne.urlCatalog}`}>
                 {lang === 'RU' ? cardOne.catalog : cardOne.catalogMD}
               </Link>
@@ -175,7 +176,7 @@ export default function ProductCard() {
       {
         cardUrl.length > 1 &&
         <div className="container similar-products">
-          <h2 className="h4-size my-5">{lang === 'RU' ? 'Похожие товары' : 'Produse similare'}</h2>
+          <h2 className={`${bgColor ? 'text-[#333]' : 'text-[#D1D1D1]' } h4-size my-5`} >{lang === 'RU' ? 'Похожие товары' : 'Produse similare'}</h2>
           <Swiper
             modules={[Navigation, Pagination, Scrollbar, A11y]}
             spaceBetween={10}

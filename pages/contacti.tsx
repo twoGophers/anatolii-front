@@ -8,11 +8,12 @@ export default function Contacti() {
 
   const center = [47.024512, 28.832159];
   const zoom = 9;
+  const { bgColor } = useAppSelector((state) => state.ui);
 
   const lang = useAppSelector((state) => state.ui.ui);
 
   return (
-    <div className='container'>
+    <div className={`${bgColor ? 'text-[#333]' : 'text-[#D1D1D1]' } container`}>
       {/* CEO */}
         <HeadComponent
           title={ lang === "RU" ? 'Контакты' : 'Contacte'}

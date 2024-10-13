@@ -48,7 +48,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <div className={`flex flex-col min-h-screen color-transition ${bgColor ? 'bg-white' : 'bg-[#121212]'}`}>
           <SmokeEffect backgroundColor="white" />
           <div className={`container-animation ${animationClass} flex-grow max-md:mt-4`}>
-            <div className="container">
+            <div className={`${bgColor ? 'bg-white' : 'bg-[#121212]'}  color-transition container sticky top-0 z-1 `}>
               <Header />
             </div>
             <div className="flex-grow mb-10 md:mb-24 mt-4 md:mt-5">

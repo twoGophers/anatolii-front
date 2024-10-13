@@ -12,7 +12,7 @@ export default function Catalog({ lang, cardUrl }: any) {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { isLangLoaded } = useLang();
-  const { icon } = useAppSelector((state) => state.ui);
+  const { icon, bgColor } = useAppSelector((state) => state.ui);
   const [animationClass, setAnimationClass] = useState<string>('');
 
   useEffect(() => {
@@ -73,7 +73,7 @@ export default function Catalog({ lang, cardUrl }: any) {
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />
             </div>
-            <h5 className="mt-2 text-center">
+            <h5 className={`${ bgColor ? 'text-[#333]' : 'text-[#D1D1D1]' } mt-2 text-center`}>
               {lang === 'RU' ? item.name : item.nameMD}
             </h5>
             <div className="w-full flex justify-center mt-1 ">
