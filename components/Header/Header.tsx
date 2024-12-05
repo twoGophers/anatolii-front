@@ -44,7 +44,7 @@ export default function Header() {
   }
 
   return (
-    <header className={` flex flex-row justify-between items-center sticky ${bgColor ? 'text-[#333]' : 'text-[#D1D1D1]'}`}>
+    <header className={` flex flex-row justify-between items-center sticky z-20  ${bgColor ? 'text-[#333]' : 'text-[#D1D1D1]'}`}>
       <div onClick={handleShowMobileMenu} className={`md:hidden burger-container group w-6 h-4 flex flex-col justify-between items-start cursor-pointer `}>
         <span className={`${bgColor ? 'bg-black' : 'bg-[#d1d1d1]'} block w-full h-0.5 origin-left transition-all duration-300 group-hover:w-1/2 group-hover:bg-gray-400`}></span>
         <span className={`${bgColor ? 'bg-black' : 'bg-[#d1d1d1]'} block w-full h-0.5 transition-all duration-300 group-hover:bg-gray-400`}></span>

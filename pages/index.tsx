@@ -214,7 +214,7 @@ export const Title = ( { lang, textRU, textRO }: any ) => {
   return (
     <div className="title-home relative my-5 flex items-center justify-center ">
       <span className="absolute inset-x-0 bottom-1/2 h-[1px] bg-gray-300 "></span>
-      <h4 className={`${bgColor ? 'bg-white text-[#333]' : 'bg-[#121212] text-[#D1D1D1]' } color-transition  text-center relative z-10  text-lg font-bold px-4 max-md:text-base ` }> { lang === "RU" ? textRU : textRO } </h4>
+      <h4 className={`${bgColor ? 'bg-white text-[#333]' : 'bg-[#121212] text-[#D1D1D1]' } color-transition  text-center relative  text-lg font-bold px-4 max-md:text-base ` }> { lang === "RU" ? textRU : textRO } </h4>
     </div>
   )
 }

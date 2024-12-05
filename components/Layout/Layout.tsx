@@ -45,9 +45,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <Image src={Preloader} alt="Loading..." width={50} height={50} />
         </div>
         :
-        <div className={`flex flex-col min-h-screen color-transition ${bgColor ? 'bg-white' : 'bg-[#121212]'}`}>
+        <div className={`flex flex-col min-h-screen color-transition relative ${bgColor ? 'bg-white' : 'bg-[#121212]'}`}>
           <div className="smoke-effect">
-            <SmokeEffect backgroundColor="white" />
+            <SmokeEffect backgroundColor={ bgColor } />
           </div>
           <div className={`container-animation ${animationClass} flex-grow max-md:mt-4`}>
             <div className={`${bgColor ? 'bg-white' : 'bg-[#121212]'}  color-transition container sticky top-0 z-1 `}>
