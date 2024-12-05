@@ -2,7 +2,8 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
-const SmokeEffect = ({ backgroundColor = 'white' }) => {
+const SmokeEffect = ({ backgroundColor }) => {
+
   const containerRef = useRef();
 
   useEffect(() => {
@@ -50,7 +51,7 @@ const SmokeEffect = ({ backgroundColor = 'white' }) => {
     }
 
     // Инициализируем частицы с цветами для белого или черного фона
-    const colorsArray = backgroundColor === 'white' ? whiteSmokeColors : blackSmokeColors;
+    const colorsArray = backgroundColor ? whiteSmokeColors : blackSmokeColors;
     
     function initializeParticles() {
       for (let i = 0; i < particleCount; i++) {
