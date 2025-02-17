@@ -51,7 +51,7 @@ export default function Header() {
         <span className={`${bgColor ? 'bg-black' : 'bg-[#d1d1d1]'} block w-full h-0.5 origin-left transition-all duration-300 group-hover:w-1/2 group-hover:bg-gray-400`}></span>
       </div>
       {/* Toogle thema */}
-      <div className="absolute  right-0 hidden md:block md:-bottom-5 lg:top-2 ">
+      <div className="absolute  right-0 hidden md:block md:-bottom-5 lg:top-2  max-h-3">
         <ToggleSwitch />
       </div>
 
