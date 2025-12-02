@@ -26,6 +26,7 @@ interface URL {
 }
 
 export default function ProductCard() {
+  const [validImages, setValidImages] = useState<string[]>([]);
   const router = useRouter();
   const dispatch = useAppDispatch();
   const lang = useAppSelector((state) => state.ui.ui);
@@ -64,6 +65,30 @@ export default function ProductCard() {
     setUrlBread(url);
   }, [lang, cardOne]);
 
+  
+useEffect(() => {
+  if (!cardOne || !cardOne.images) return;
+
+  const images = cardOne.images; // локальная переменная, TypeScript понимает, что она точно существует
+
+  async function checkImages() {
+    const working: string[] = [];
+
+    for (const img of images) {
+      const url = `${baseUrl}/${img}`;
+
+      try {
+        const res = await fetch(url, { method: "HEAD" });
+        if (res.ok) working.push(img);
+      } catch (e) {}
+    }
+
+    setValidImages(working);
+  }
+
+  checkImages();
+}, [cardOne]);
+
   if (!cardOne) return <div>Product not found</div>;
 
   const openFullscreen = (index: any) => {
@@ -84,70 +109,73 @@ export default function ProductCard() {
         <Margin />
         <Breadcrumbs bread={urlBread} />
         <div className=" w-full flex flex-col gap-x-7 justify-between mt-2 md:flex-row">
-          <div className="card-slider w-full md:w-1/2 flex flex-row items-start gap-x-6">
-            {/* Thumbs Swiper */}
-            <div className="w-1/4 max-lg:hidden">
-              <Swiper
-                onSwiper={(swiper) => setThumbsSwiper(swiper)} // Set the thumbsSwiper instance
-                modules={[Thumbs, Navigation, Pagination, Scrollbar, A11y]}
-                spaceBetween={10}
-                slidesPerView={3}
-                direction="vertical"
-                navigation={{
-                  nextEl: '.swiper-thumb-next',
-                  prevEl: '.swiper-thumb-prev',
-                }}
-                className="thumbs-slider"
-                breakpoints={{
-                  1024: {
-                    direction: 'vertical',
-                    slidesPerView: 3,
-                  },
-                  0: {
-                    direction: 'horizontal',
-                    slidesPerView: 2,
-                  },
-                }}
-              >
-                {cardOne.images.map((item, index) => (
-                  <SwiperSlide className="relative cursor-pointer" key={index}>
-                    <Image
-                      src={`${baseUrl}/${item}`}
-                      alt={item}
-                      width={100}
-                      height={100}
-                      priority
-                    />
-                  </SwiperSlide>
-                ))}
-              </Swiper>
-            </div>
-            <div className="w-3/4 max-lg:w-full">
-              {/* Main Swiper */}
-              <Swiper
-                modules={[Thumbs, Navigation, Pagination, Scrollbar, A11y]}
-                navigation
-                spaceBetween={2}
-                thumbs={{ swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null }}
-                className="main-slider swiper-card flex"
-              >
-                {cardOne.images.map((item, index) => (
-                  <SwiperSlide key={index} className="relative w-full slider-card-main">
-                    <Image
-                      src={`${baseUrl}/${item}`}
-                      alt={item}
+          {
+            validImages.length > 0 &&
+            <div className="card-slider w-full md:w-1/2 flex flex-row items-start gap-x-6">
+              {/* Thumbs Swiper */}
+              <div className="w-1/4 max-lg:hidden">
+                <Swiper
+                  onSwiper={(swiper) => setThumbsSwiper(swiper)} // Set the thumbsSwiper instance
+                  modules={[Thumbs, Navigation, Pagination, Scrollbar, A11y]}
+                  spaceBetween={10}
+                  slidesPerView={3}
+                  direction="vertical"
+                  navigation={{
+                    nextEl: '.swiper-thumb-next',
+                    prevEl: '.swiper-thumb-prev',
+                  }}
+                  className="thumbs-slider"
+                  breakpoints={{
+                    1024: {
+                      direction: 'vertical',
+                      slidesPerView: 3,
+                    },
+                    0: {
+                      direction: 'horizontal',
+                      slidesPerView: 2,
+                    },
+                  }}
+                >
+                  {validImages.map((item, index) => (
+                    <SwiperSlide className="relative cursor-pointer" key={index}>
+                      <Image
+                        src={`${baseUrl}/${item}`}
+                        alt={item}
+                        width={100}
+                        height={100}
+                        priority
+                      />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              </div>
+              <div className="w-3/4 max-lg:w-full">
+                {/* Main Swiper */}
+                <Swiper
+                  modules={[Thumbs, Navigation, Pagination, Scrollbar, A11y]}
+                  navigation
+                  spaceBetween={2}
+                  thumbs={{ swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null }}
+                  className="main-slider swiper-card flex"
+                >
+                  {validImages.map((item, index) => (
+                    <SwiperSlide key={index} className="relative w-full slider-card-main">
+                      <Image
+                        src={`${baseUrl}/${item}`}
+                        alt={item}
 
-                      width={1000}
-                      height={100}
-                      priority
-                      className="responsive object-contain"
-                      onClick={() => openFullscreen(index)}
-                    />
-                  </SwiperSlide>
-                ))}
-              </Swiper>
+                        width={1000}
+                        height={100}
+                        priority
+                        className="responsive object-contain"
+                        onClick={() => openFullscreen(index)}
+                      />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              </div>
             </div>
-          </div>
+          }
           <div className="w-full md:w-1/2 flex flex-col content-between">
             <h1 className={`${bgColor ? 'text-[#333]' : 'text-[#D1D1D1]' } text-xl sm:text-2xl lg:text-3xl font-bold`}>{lang === 'RU' ? cardOne.name : cardOne.nameMD}</h1>
             <p className="text-[#a6c4b1] text-2xl max-lg:text-xl font-medium mt-2">

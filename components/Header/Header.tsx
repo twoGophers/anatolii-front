@@ -116,7 +116,7 @@ export default function Header() {
                 </span>
                 <FontAwesomeIcon icon={faChevronDown} className="w-3 ml-1" />
               </Link>
-              {isDropdownVisible && (
+              {isDropdownVisible && catalogAll.length > 0 && (
                 <div
                   className={`${
                     isAnimating ? "nav-show-block" : "nav-hide-block"

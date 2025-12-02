@@ -41,6 +41,7 @@ export default function Home() {
   if (!isMounted) {
     return null;
   }
+  
 
   return (
     <section className='home container'>
@@ -64,7 +65,7 @@ export default function Home() {
                     fill
                     priority
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    alt="Home"
+                    alt={item?.image || 'image'}
                     className='object-cover transition-transform duration-500 ease-in-out group-hover:scale-110'
                   />
                 }
@@ -100,7 +101,7 @@ export default function Home() {
                         fill
                         priority
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        alt="Home"
+                        alt={item?.image || 'image'}
                         className='object-cover transition-transform duration-500 ease-in-out group-hover:scale-110'
                       />
                     }
@@ -134,13 +135,13 @@ export default function Home() {
                 <Link key={item.url || item.name}  onClick={() => handleLSCatalogName(item)} href={`catalog/${item.url}`} className='relative group w-full'>
                   <div className='overflow-hidden relative transform transition-all duration-500 ease-in-out  h-[250px] max-md:h-[200px]'>
                     {
-                      item?.image &&       
+                      item?.image?.length > 0 &&       
                       <Image
-                        src={`${baseUrl}/${item.image}`}
+                        src={`${baseUrl}/${item.image[0]}`}
                         fill
                         priority
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        alt="Home"
+                        alt={item?.image[0] || 'image'}
                         className='object-cover transition-transform duration-500 ease-in-out group-hover:scale-110'
                       />
                     }
@@ -157,7 +158,7 @@ export default function Home() {
         }
 
         {
-          catalogAll.length !== 0 &&
+          catalogAll.length !== 0 && catalogAll[1]?.items.length > 0 &&
           <>
                   {/* Second block */}
                 <Title 
@@ -193,7 +194,7 @@ export default function Home() {
                             fill
                             priority
                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                            alt="Home"
+                            alt={item?.image || 'image'}
                             className='object-cover transition-transform duration-500 ease-in-out group-hover:scale-110'
                           />
                       </div>
