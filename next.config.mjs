@@ -10,7 +10,7 @@ const nextConfig = {
             },
             {
                 protocol: 'https',
-                hostname: 'www.forcestyle.space',
+                hostname: 'https://anatolii-back.vercel.app',
                 pathname: '/image/**',
             },
         ],
