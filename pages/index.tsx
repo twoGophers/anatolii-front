@@ -148,7 +148,6 @@ export default function Home() {
                     }
                     <div className='group__box-shadow'></div>
                     <div className='absolute bottom-4 flex justify-center w-full z-2'>
-                      <p>{`${baseUrl}/${item.image[0]}`}</p>
                       <h4 className={`${bgColor ? ' text-white' : 'text-[#D1D1D1]'} text-lg font-bold color-transition`}>{ lang === "RU" ? item?.name : item?.nameMD }</h4>
                     </div>
                   </div>
