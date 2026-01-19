@@ -65,7 +65,7 @@ export default function Home() {
                     fill
                     priority
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    alt={item?.image || 'image'}
+                    alt={`${baseUrl}/${item.image}` || 'image'}
                     className='object-cover transition-transform duration-500 ease-in-out group-hover:scale-110'
                   />
                 }
@@ -101,7 +101,7 @@ export default function Home() {
                         fill
                         priority
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        alt={item?.image || 'image'}
+                        alt={`${baseUrl}/${item.image}` || 'image'}
                         className='object-cover transition-transform duration-500 ease-in-out group-hover:scale-110'
                       />
                     }
@@ -134,6 +134,7 @@ export default function Home() {
                 catalogAll && catalogAll[1]?.items?.slice(0, 3).map(( item: any ) => (
                 <Link key={item.url || item.name}  onClick={() => handleLSCatalogName(item)} href={`catalog/${item.url}`} className='relative group w-full'>
                   <div className='overflow-hidden relative transform transition-all duration-500 ease-in-out  h-[250px] max-md:h-[200px]'>
+                    
                     {
                       item?.image?.length > 0 &&       
                       <Image
@@ -147,6 +148,7 @@ export default function Home() {
                     }
                     <div className='group__box-shadow'></div>
                     <div className='absolute bottom-4 flex justify-center w-full z-2'>
+                      <p>{`${baseUrl}/${item.image[0]}`}</p>
                       <h4 className={`${bgColor ? ' text-white' : 'text-[#D1D1D1]'} text-lg font-bold color-transition`}>{ lang === "RU" ? item?.name : item?.nameMD }</h4>
                     </div>
                   </div>
@@ -194,7 +196,7 @@ export default function Home() {
                             fill
                             priority
                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                            alt={item?.image || 'image'}
+                            alt={`${baseUrl}/${item.image}` || 'image'}
                             className='object-cover transition-transform duration-500 ease-in-out group-hover:scale-110'
                           />
                       </div>
