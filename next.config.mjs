@@ -10,7 +10,7 @@ const nextConfig = {
             },
             {
                 protocol: 'https',
-                hostname: 'https://anatolii-back.vercel.app',
+                hostname: 'anatolii-back.vercel.app',
                 pathname: '/image/**',
             },
         ],
